@@ -16,10 +16,12 @@ See http://www.latex-project.org/lppl.txt
 Phylogenetic trees are representations of evolutive relations between species.
 
 This package works only with lualatex because it relies on lua to parse, build and export the tree.
+
+Theres's a french translation (in fact the original version!) Inside the dtx file. To typeset it, you have to change the value of the \langue macro to anything but "english".
 %</readme>
 %<*ltxconfig>
 \AtEndOfClass{\RequirePackage{hypdoc}}
-\AtBeginDocument{\OnlyDescription}
+%\AtBeginDocument{\OnlyDescription}
 \AtBeginDocument{\CodelineIndex\EnableCrossrefs}
 \AtEndDocument{\PrintIndex}
 \AtBeginDocument{\RecordChanges}
@@ -140,7 +142,7 @@ End of file `\outFileName'.^^J%
 \usepackage{xifthen}
 \usepackage{\jobname}
 \newcommand{\langue}{}
-\renewcommand{\langue}{english}
+\renewcommand{\langue}{}
 \ifthenelse{\equal{\langue}{english}}{\usepackage[english]{babel}}{\usepackage[frenchb]{babel}}
 \newcommand{\lang}[2]{\ifthenelse{\equal{\langue}{english}}{#1}{#2}}
 \begin{document}
@@ -371,7 +373,7 @@ End of file `\outFileName'.^^J%
 %    \begin{macrocode}
 \RequirePackage{ifluatex}
 %    \end{macrocode}
-%\macro{tikz} \lang{If the format is not \LaTeX, generate an error. TikZ is loaded and comes with pgfkeys.}{Si \LaTeX\ n'est pas le format utilisé, une erreur est générée. Sinon TikZ est chargé ainsi que pgfkeys.}
+%\macro{tikz} \lang{If the format is not \LaTeX, generate an error. TikZ is loaded and comes with pgfkeys.}{Si \LaTeX\ n'est pas le format utilisé, une erreur est générée. Sinon TikZ est chargé --- ainsi que pgfkeys.}
 %    \begin{macrocode}
 \ifluatex
   \RequirePackage{tikz}
@@ -383,7 +385,7 @@ End of file `\outFileName'.^^J%
 %    \end{macrocode}
 %\lang{\subsubsection{Key/value definitions}}{\subsubsection{Définition des clés/valeurs}}
 %
-%\lang{}{Les valeurs données seront les valeurs par défaut lorsqu'on écrira par exemple un arbre sans aucun argument.}
+%\lang{}{Les valeurs données seront les valeurs par défaut. Elles sont utilisées lorsqu'on écrit un arbre sans argument par exemple.}
 %    \begin{macrocode}
 \pgfkeys{
   /phylogenetic tree/.cd,
@@ -396,7 +398,7 @@ End of file `\outFileName'.^^J%
 }
 %    \end{macrocode}
 %\begin{macro}{\phylogenetictree}
-%\lang{}{La macro \verb|phylogenetictree| récupère ses arguments. Elle charge les arguments optionnels par défaut. Elle appelle ensuite \verb|directlua| et passe l'ensemble des arguments dans une table.}
+%\lang{}{La macro \verb|phylogenetictree| passe ses arguments optionnels à \verb|pgfkeys| ; s'il en manque, il utilise les valeurs par défaut. Elle appelle ensuite \verb|directlua| et passe l'ensemble des arguments dans une table lua. Enfin elle execute le fichier \verb|phylogenetictree.lua| qui contient l'ensemble des fonctions lua. Comme on travaille dans le même «chunk» lua, les valeurs passées sont toujours présentes lors de l'exécution du fichier.}
 %    \begin{macrocode}
 \newcommand{\phylogenetictree}[2][]{%
   \pgfkeys{#1}
@@ -429,7 +431,7 @@ End of file `\outFileName'.^^J%
 require "lpeg"
 %    \end{macrocode}
 %
-%\subsubsection{Auxiliary functions}
+%\lang{\subsubsection{Auxiliary functions}}{\subsubsection{Fonctions auxiliaires}}
 %
 %\macro{ReadFile}
 %\lang{The \verb|ReadFile| function checks if the argument of \verb|phylogenetictree| is a string or a filename. In the latter case, the file is open, and the newick tree is copied into \verb|arguments["tree"]|.}{La fonction \verb|ReadFile| teste si l'argument de \verb|phylogenetictree| (qui a été passé à lua sans changement) est une chaîne de caractères ou un nom de fichier. Dans ce cas, le fichier est lu et le code de l'arbre est copié dans  \verb|arguments["tree"]|.}
@@ -451,27 +453,24 @@ function ReadFile (newicktree)
   end
 end
 %    \end{macrocode}
-%\macro{FindAllLeaves}
-%\lang{The \verb|FindAllLeaves| function finds all leaves of a tree associated with a particular node. It's a recursive function. It takes three arguments : }{La fonction \verb|FindAllLeaves| trouve toutes les feuilles associées à un nœud particulier. C'est une fonction récursive. Elle prend trois arguments : le code de l'arbre trié dans une table, }
-%\begin{description}
-%\item [tree] The 
-%\end{description}
+%\begin{macro}{FindAllLeaves}
+%\lang{The \verb|FindAllLeaves| function finds all leaves of a tree associated with a particular node. It's a recursive function. It takes three arguments : }{La fonction \verb|FindAllLeaves| trouve puis copie toutes les feuilles associées à un nœud parent particulier. C'est une fonction récursive. Elle prend trois arguments : \verb|tree|, la table contenant le code de l'arbre parsé ; \verb|leaves|, une table dans laquelle sera écrit l'ensemble des feuilles ; \verb|parent|, un nœud parent.}
 %    \begin{macrocode}
 -- FindAllLeaves function (recursive)
 -- Finds all leaves of a tree associated with a particular node
-function FindAllLeaves (tree, leaves, n)
-  if type(tree[n]["childs"]) == "table" then
-    for _,v in pairs (tree[n]["childs"]) do
+function FindAllLeaves (tree, leaves, parent)
+  if type(tree[parent]["childs"]) == "table" then
+    for _,v in pairs (tree[parent]["childs"]) do
       FindAllLeaves (tree, leaves, v)
     end
-  elseif tree[n]["childs"] == nil then
-    table.insert(leaves,n)
+  elseif tree[parent]["childs"] == nil then
+    table.insert(leaves,parent)
   end
 end
-
 %    \end{macrocode}
-%\macro{GetNum}
-%The \verb|Getnum| function gives the total number of entries in an indexed table. 
+%\end{macro}
+%\begin{macro}{GetNum}
+%\lang{The \verb|Getnum| function gives the total number of entries in an indexed table.}{La fonction \verb|Getnum| donne le nombre total d'entrées dans une table indexée.}
 %    \begin{macrocode}
 -- GetNum function
 -- Give the total number of entries in an indexed table
@@ -482,10 +481,10 @@ function GetNum (table)
   end
   return count
 end
-
 %    \end{macrocode}
-%\macro{Gsub}
-%The \verb|Gsub| function is an implementation of the \verb|string.gsub| function (plain lua) with lpeg.
+%\end{macro}
+%\begin{macro}{Gsub}
+%\lang{The \verb|Gsub| function is an implementation of the \verb|string.gsub| function (plain lua) with \verb|lpeg|.}{La fonction \verb|Gsub| implémente la fonction \verb|string.gsub| (plain lua) avec \verb|lpeg|.}
 %    \begin{macrocode}
 -- Gsub function
 -- Implementation of the string.gsub function (plain lua) with lpeg
@@ -494,18 +493,17 @@ function Gsub (string, pattern, replacement)
   pattern = lpeg.Cs((pattern / replacement + 1)^0)
   return lpeg.match(pattern, string)
 end
-
 %    \end{macrocode}
+%\end{macro}
 %\subsubsection{Newick Parser}
-%\macro{NewickParser}
-%The \verb|NewickParser| function transforms inline Newick notation into a table.
+%\begin{macro}{NewickParser}
+%\lang{The \verb|NewickParser| function transforms inline Newick notation into a table.}{La fonction \verb|NewickParser| transforme la notation Newick en table.}
 %    \begin{macrocode}
 -- NewickParser function
 -- Transforms inline Newick notation into a table
 function NewickParser (newicktree)
-
 %    \end{macrocode}
-%\paragraph{Preliminary declarations}
+%\lang{\paragraph{Variables declarations}}{\paragraph{Déclaration des variables}}
 %    \begin{macrocode}
   -- variable declarations
   local node = {}
@@ -514,9 +512,8 @@ function NewickParser (newicktree)
   local current_node = 1
   local parent_node = 0
   local counter = 1
-
 %    \end{macrocode}
-%Pattern definitions: declaration of all the symbols used by Newick format.
+%\lang{Pattern definitions: declaration of all the symbols used by Newick format.}{Déclaration des symboles de la grammaire Newick. Chaque motif est déclaré.}
 %    \begin{macrocode}
   -- Newick grammar
   lpeg.locale(lpeg)
@@ -558,20 +555,27 @@ function NewickParser (newicktree)
 %While the counter's value is smaller than the string's length, the loop is not ended.\\
 %If the character is one of the Newick's grammar, it is moved into the table and the counter is incremented by one.
 %    \begin{macrocode}
-  -- copy Newick's characters into the table 
-  while counter <= string.len(newicktree) do
-    if lpeg.match(NewickPunctuation,newicktree,counter) then
-      table.insert(newicktable,lpeg.match(lpeg.C(NewickPunctuation),
-        newicktree,counter))
-      counter = counter + 1
-
+  -- copy Newick's characters into the table
 %    \end{macrocode}
-%If the character is a "[", it means there's a comment. It removes everything between "[" and "]" and the characters themselves.
+%\lang{}{Tant que la valeur du compteur est inférieure à la longueur totale du code de l'arbre, la boucle continue.}
+%    \begin{macrocode}
+  while counter <= string.len(newicktree) do
+%    \end{macrocode}
+%\lang{}{Si le caractère correspond à un motif de la grammaire, on copie ce motif dans la table temporaire et on incrémente le compteur de 1.}
+%    \begin{macrocode}
+    if lpeg.match(NewickPunctuation,newicktree,counter) then
+      table.insert(
+        newicktable,lpeg.match(
+          lpeg.C(NewickPunctuation),newicktree,counter
+        )
+      )
+      counter = counter + 1
+%    \end{macrocode}
+%\lang{If the character is a "[", it means there's a comment. It removes everything between "[" and "]" and the characters themselves.}{Si le caractère est un "[" cela marque le début d'un commentaire.}
 %    \begin{macrocode}
     -- matches comments
     elseif lpeg.match(balancedcommentpattern,newicktree,counter) then
       counter = lpeg.match(balancedcommentpattern,newicktree,counter+1)
-
 %    \end{macrocode}
 %If the character is a ' or a ", it means there's a label. It matches everything between \texttt{'} and \texttt{'}.
 %    \begin{macrocode}
@@ -711,7 +715,7 @@ function NewickParser (newicktree)
   end
   return node -- return thee node table
 end
-
+%\end{macro}
 %    \end{macrocode}
 %\lang{\subsubsection{Composing functions}}{\subsubsection{Fonction de composition}}
 %
