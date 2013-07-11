@@ -67,7 +67,7 @@ Copyright (C) 2012 by
     Vincent Garibal <vincent.garibal@gmail.com>
 
 It may be distributed and/or modified under the conditions of
-the LaTeX Project Public License (LPPL), either version 1.NewickPunctuation3c of
+the LaTeX Project Public License (LPPL), either version 1.3c of
 this license or (at your option) any later version.  The latest
 version of this license is in the file:
     http://www.latex-project.org/lppl.txt
@@ -140,6 +140,7 @@ End of file `\outFileName'.^^J%
 \documentclass{ltxdoc}
 \usepackage{fontspec}
 \usepackage{xifthen}
+\usepackage[backgroundcolor=white,linecolor=black,textsize=footnotesize,shadow]{todonotes}
 \usepackage{\jobname}
 \newcommand{\langue}{}
 \renewcommand{\langue}{}
@@ -359,6 +360,12 @@ End of file `\outFileName'.^^J%
 %
 %\lang{\section{The Description of Macros}}{\section{Description des macros}}
 %
+%
+%    De L'Art poétique (1674)
+%
+%    Ce que l'on conçoit bien s'énonce clairement,
+%    Et les mots pour le dire arrivent aisément. (Chant I) 
+%
 %\lang{\subsection{The \LaTeX\ code}}{\subsection{Le code \LaTeX}}
 %
 %\lang{\subsubsection{Definitions and packages loading}}{\subsubsection{Définitions et chargement des paquets}}
@@ -484,7 +491,7 @@ end
 %    \end{macrocode}
 %\end{macro}
 %\begin{macro}{Gsub}
-%\lang{The \verb|Gsub| function is an implementation of the \verb|string.gsub| function (plain lua) with \verb|lpeg|.}{La fonction \verb|Gsub| implémente la fonction \verb|string.gsub| (plain lua) avec \verb|lpeg|.}
+%\lang{The \verb|Gsub| function (\href{http://www.inf.puc-rio.br/~roberto/lpeg/#ex}{lpeg documentation}) is an implementation of the \verb|string.gsub| function (plain lua) with \verb|lpeg|.}{La fonction \verb|Gsub| (\href{http://www.inf.puc-rio.br/~roberto/lpeg/#ex}{documentation de lpeg}) implémente la fonction \verb|string.gsub| (plain lua) avec \verb|lpeg|.}
 %    \begin{macrocode}
 -- Gsub function
 -- Implementation of the string.gsub function (plain lua) with lpeg
@@ -497,7 +504,7 @@ end
 %\end{macro}
 %\subsubsection{Newick Parser}
 %\begin{macro}{NewickParser}
-%\lang{The \verb|NewickParser| function transforms inline Newick notation into a table.}{La fonction \verb|NewickParser| transforme la notation Newick en table.}
+%\todo{find a better algorithm}\lang{The \verb|NewickParser| function transforms inline Newick notation into a table.}{La fonction \verb|NewickParser| transforme la notation Newick en table.}
 %    \begin{macrocode}
 -- NewickParser function
 -- Transforms inline Newick notation into a table
@@ -513,55 +520,65 @@ function NewickParser (newicktree)
   local parent_node = 0
   local counter = 1
 %    \end{macrocode}
-%\lang{Pattern definitions: declaration of all the symbols used by Newick format.}{Déclaration des symboles de la grammaire Newick. Chaque motif est déclaré.}
+%\lang{Pattern definitions: declaration of all the symbols used by Newick format.}{\paragraph{Déclaration des motifs de recherche} Pour chacun des symboles de la grammaire Newick, on déclare une variable.}
 %    \begin{macrocode}
   -- Newick grammar
-  lpeg.locale(lpeg)
-  local leftparenthesis = lpeg.P("(")
-  local rightparenthesis = lpeg.P(")")
-  local colon = lpeg.P(":")
-  local semicolon = lpeg.P(";")
-  local comma = lpeg.P(",")
-  local singlequote = lpeg.P("'")
-  local doublequote = lpeg.P('"')
-  local underscore = lpeg.P("_")
-  local leftsquarebracket = lpeg.P("[")
-  local rightsquarebracket = lpeg.P("]")
+  local space = lpeg.P(" ")
+  local digit = lpeg.P(lpeg.R("09"))
+  local number = lpeg.P(digit + ".")
+
+  local colon                = lpeg.P(":")
+  local semicolon            = lpeg.P(";")
+  local comma                = lpeg.P(",")
+  local singlequote          = lpeg.P("'")
+  local doublequote          = lpeg.P('"')
+  local underscore           = lpeg.P("_")
+  local leftparenthesis      = lpeg.P("(")
+  local rightparenthesis     = lpeg.P(")")
+  local leftsquarebracket    = lpeg.P("[")
+  local rightsquarebracket   = lpeg.P("]")
+
   local NewickPunctuation = lpeg.P(leftparenthesis
     + rightparenthesis + colon + semicolon + comma)	
   local comments = lpeg.P(leftsquarebracket + rightsquarebracket)
-  local quotation = lpeg.P(singlequote + doublequote)
-  local space = lpeg.space
-  local digit = lpeg.digit
-  local number = lpeg.P(digit + ".")
-  local balancedcommentpattern = lpeg.P{
-      leftsquarebracket * 
-      ((1 - lpeg.S("[]")) + lpeg.V(1))^0
-      * rightsquarebracket
-  }
-  local balancedsinglequotepattern = lpeg.P{
-      singlequote * 
-      ((1 - lpeg.S("'")) + lpeg.V(1))^0
-      * singlequote
-  }
-  local balanceddoublequotepattern = lpeg.P{
-      doublequote * 
-      ((1 - lpeg.S('"')) + lpeg.V(1))^0
-      * doublequote
-  }
-
 %    \end{macrocode}
-%\paragraph{Convert inline Newick into a temporary table}
-%While the counter's value is smaller than the string's length, the loop is not ended.\\
-%If the character is one of the Newick's grammar, it is moved into the table and the counter is incremented by one.
+%\lang{}{\todo{translate in english}Le motif suivant est plus complexe. Le code se base un des exemples donnés dans la  \href{http://www.inf.puc-rio.br/~roberto/lpeg/#ex}{documentation de \verb|lpeg| (Balanced parentheses)}. Il s'agit de trouver une chaîne qui est \emph{exactement} entre deux crochets (\emph{balanced brackets}). Une chaîne entre crochets commence donc par 
+%\begin{enumerate}
+%\item un crochet gauche,
+%\item suivi de 0 ou plus répétitions de n'importe quoi sauf 1) des crochets (\verb|(1 - lpeg.S("[]"))|) ou 2) une chaine entre crochets (\verb|lpeg.V(1)|)
+%\item et terminé par un crochet droit.
+%\end{enumerate}}
+%    \begin{macrocode}
+  local balancedcommentpattern = lpeg.P{
+    leftsquarebracket * 
+    ((1 - lpeg.S("[]")) + lpeg.V(1))^0
+    * rightsquarebracket
+  }
+%    \end{macrocode}
+%\lang{}{Le motif pour les guillemets simples est construit de la même façon que le motif précédent pour les crochets.}
+%    \begin{macrocode}
+  local balancedsinglequotepattern = lpeg.P{
+    singlequote * 
+    ((1 - lpeg.S("'")) + lpeg.V(1))^0
+    * singlequote
+  }
+%    \end{macrocode}
+%\lang{}{Le motif pour les guillemets doubles est construit de la même façon que le motif précédent pour les crochets.}
+%    \begin{macrocode}
+  local balanceddoublequotepattern = lpeg.P{
+    doublequote * 
+    ((1 - lpeg.S('"')) + lpeg.V(1))^0
+    * doublequote
+  }
+%    \end{macrocode}
+%\lang{\paragraph{Convert inline tree into a table}}{\paragraph{Conversion de l'arbre en table}\todo{Is it possible to do this with only 1 table?}}
+%
+%\lang{While the counter's value is smaller than the string's length, the loop continues.}{Tant que la valeur du compteur est inférieure à la longueur totale du code de l'arbre, la boucle continue.}
 %    \begin{macrocode}
   -- copy Newick's characters into the table
-%    \end{macrocode}
-%\lang{}{Tant que la valeur du compteur est inférieure à la longueur totale du code de l'arbre, la boucle continue.}
-%    \begin{macrocode}
   while counter <= string.len(newicktree) do
 %    \end{macrocode}
-%\lang{}{Si le caractère correspond à un motif de la grammaire, on copie ce motif dans la table temporaire et on incrémente le compteur de 1.}
+%\lang{If the character is one of the Newick's grammar, it is moved into the table and the counter is incremented by one.}{Si le caractère correspond à un motif de la grammaire, on copie ce motif dans la table temporaire et on incrémente le compteur de 1.}
 %    \begin{macrocode}
     if lpeg.match(NewickPunctuation,newicktree,counter) then
       table.insert(
@@ -577,7 +594,7 @@ function NewickParser (newicktree)
     elseif lpeg.match(balancedcommentpattern,newicktree,counter) then
       counter = lpeg.match(balancedcommentpattern,newicktree,counter+1)
 %    \end{macrocode}
-%If the character is a ' or a ", it means there's a label. It matches everything between \texttt{'} and \texttt{'}.
+%\todo{translate in french}If the character is a ' or a ", it means there's a label. It matches everything between \texttt{'} and \texttt{'}.
 %    \begin{macrocode}
     -- matches labels
     elseif lpeg.match(balancedsinglequotepattern,newicktree,counter) then
@@ -586,15 +603,14 @@ function NewickParser (newicktree)
       counter = lpeg.match(balancedsinglequotepattern,newicktree,counter+1)
 
 %    \end{macrocode}
-%
-%Remove spaces between Newick grammar.
+%\todo{translate in french}Remove spaces between Newick grammar.
 %    \begin{macrocode}
     -- Remove spaces between Newick grammar
     elseif lpeg.match(space,newicktree,counter) then
       counter = counter + 1
 
 %    \end{macrocode}
-%Remove single quotes et replace underscore with space.
+%\todo{translate in french}Remove single quotes et replace underscore with space.
 %    \begin{macrocode}
     -- Remove single quotes et replace underscore with space
     else
@@ -609,7 +625,7 @@ function NewickParser (newicktree)
   end -- end of while loop
 
 %    \end{macrocode}
-%\paragraph{Construction of the final table}
+%\paragraph{\todo{translate in french}Construction of the final table}
 %The node 1 (root) is its own parent.
 %    \begin{macrocode}
   -- The node 1 (root) is its own parent
@@ -624,13 +640,13 @@ function NewickParser (newicktree)
   }
 
 %    \end{macrocode}
-%Loop each value in the temporary table.
+%\todo{translate in french}Loop each value in the temporary table.
 %    \begin{macrocode}
   -- Loop each value in the temporary table
   for k,v in pairs(newicktable) do
 
 %    \end{macrocode}
-%Left parenthesis: create a new child node.
+%\todo{translate in french}Left parenthesis: create a new child node.
 %    \begin{macrocode}
     -- Left parenthesis : create a new child node
     if lpeg.match(leftparenthesis,v) then
@@ -652,7 +668,7 @@ function NewickParser (newicktree)
       end
 
 %    \end{macrocode}
-%Comma: come back to parent and create new child node.
+%\todo{translate in french}Comma: come back to parent and create new child node.
 %    \begin{macrocode}
     -- Comma: come back to parent and create new child node
     elseif lpeg.match(comma,v) then
@@ -674,7 +690,7 @@ function NewickParser (newicktree)
       end
 
 %    \end{macrocode}
-%Right parenthesis: come back to parent node.
+%\todo{translate in french}Right parenthesis: come back to parent node.
 %    \begin{macrocode}
     -- Right parenthesis: come back to parent node
     elseif lpeg.match(rightparenthesis,v) then
@@ -682,26 +698,26 @@ function NewickParser (newicktree)
       parent_node = node[parent_node]["parent"]
 
 %    \end{macrocode}
-%Semicolon: end of tree and so end of loop!
+%\todo{translate in french}Semicolon: end of tree and so end of loop!
 %    \begin{macrocode}
     elseif lpeg.match(semicolon,v) then
       break
 %    \end{macrocode}
-%Colon: do nothing in the loop (it means there's a distance, but it's not important for the moment)
+%\todo{translate in french}Colon: do nothing in the loop (it means there's a distance, but it's not important for the moment)
 %    \begin{macrocode}
     elseif lpeg.match(colon,v) then
 %    \end{macrocode}
-%A number is a distance. We put this number in the node table.
+%\todo{translate in french}A number is a distance. We put this number in the node table.
 %    \begin{macrocode}
     elseif lpeg.match(number,v) then
       node[current_node]["distance"] = v
 %    \end{macrocode}
-%Internal node label. If the current value is not a Newick sign but the previous is a right parenthesis, then it's the name of an internal node.
+%\todo{translate in french}Internal node label. If the current value is not a Newick sign but the previous is a right parenthesis, then it's the name of an internal node.
 %    \begin{macrocode}
     elseif lpeg.match(rightparenthesis,newicktable[k-1]) then
       node[current_node]["label"] = v
 %    \end{macrocode}
-%Anything else is the label of an external node (a leaf).
+%\todo{translate in french}Anything else is the label of an external node (a leaf).
 %    \begin{macrocode}
     else
       node[current_node]["type"] = "leaf"
@@ -710,13 +726,13 @@ function NewickParser (newicktree)
     end
 
 %    \end{macrocode}
-%End of loop, end of function, return the node table.
+%\todo{translate in french}End of loop, end of function, return the node table.
 %    \begin{macrocode}
   end
   return node -- return thee node table
 end
-%\end{macro}
 %    \end{macrocode}
+%\end{macro}
 %\lang{\subsubsection{Composing functions}}{\subsubsection{Fonction de composition}}
 %
 %\begin{macro}{Table2FoldTree}
