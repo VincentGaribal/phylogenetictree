@@ -197,7 +197,7 @@ End of file `\outFileName'.^^J%
 %
 %\tableofcontents
 %
-%\lang{\section[The Newick tree format]{The Newick tree format\footnote{\url{http://evolution.genetics.washington.edu/phylip/newicktree.html}}}
+%\lang{\section[The Newick tree format]{The Newick tree format\footnote{\url{http://evolution.genetics.washington.edu/phylip/newicktree.html}}}{}
 %
 %\subsection{Introduction}
 %
@@ -314,10 +314,9 @@ End of file `\outFileName'.^^J%
 %
 %There has been no formal publication of the Newick Standard.
 %
-%    Gary Olsen has produced a formal description of it which is available \href{http://evolution.genetics.washington.edu/phylip/newick\_doc.html}{here}.
+%Gary Olsen has produced a formal description of it which is available \href{http://evolution.genetics.washington.edu/phylip/newick\_doc.html}{here}.
 %
-%    There is a Wikipedia page on the Newick Standard available \href{http://en.wikipedia.org/wiki/Newick_format}{here}.
-%}{\section[Le format d'arbre Newick]{Le format d'arbre Newick\footnote{\url{http://evolution.genetics.washington.edu/phylip/newicktree.html}}}}
+%There is a Wikipedia page on the Newick Standard available \href{http://en.wikipedia.org/wiki/Newick_format}{here}.}{\section[Le format d'arbre Newick]{Le format d'arbre Newick\footnote{\url{http://evolution.genetics.washington.edu/phylip/newicktree.html}}}}
 %
 %\lang{\section{User interface}}{\section{Interface utilisateur}}
 %
@@ -336,8 +335,6 @@ End of file `\outFileName'.^^J%
 %\end{figure}
 %
 %\lang{\subsection{Optional arguments}}{\subsection{Arguments optionnels}}
-%
-%\lang
 %
 %\DescribeMacro{draw type}\hfill \lang{default:}{défaut :} standalone
 %
@@ -491,7 +488,7 @@ end
 %    \end{macrocode}
 %\end{macro}
 %\begin{macro}{Gsub}
-%\lang{The \verb|Gsub| function (\href{http://www.inf.puc-rio.br/~roberto/lpeg/#ex}{lpeg documentation}) is an implementation of the \verb|string.gsub| function (plain lua) with \verb|lpeg|.}{La fonction \verb|Gsub| (\href{http://www.inf.puc-rio.br/~roberto/lpeg/#ex}{documentation de lpeg}) implémente la fonction \verb|string.gsub| (plain lua) avec \verb|lpeg|.}
+%\lang{The \verb|Gsub| function (\href{http://www.inf.puc-rio.br/~roberto/lpeg/\#ex}{lpeg documentation}) is an implementation of the \verb|string.gsub| function (plain lua) with \verb|lpeg|.}{La fonction \verb|Gsub| (\href{http://www.inf.puc-rio.br/~roberto/lpeg/\#ex}{documentation de lpeg}) implémente la fonction \verb|string.gsub| (plain lua) avec \verb|lpeg|.}
 %    \begin{macrocode}
 -- Gsub function
 -- Implementation of the string.gsub function (plain lua) with lpeg
@@ -542,7 +539,7 @@ function NewickParser (newicktree)
     + rightparenthesis + colon + semicolon + comma)	
   local comments = lpeg.P(leftsquarebracket + rightsquarebracket)
 %    \end{macrocode}
-%\lang{}{\todo{translate in english}Le motif suivant est plus complexe. Le code se base un des exemples donnés dans la  \href{http://www.inf.puc-rio.br/~roberto/lpeg/#ex}{documentation de \verb|lpeg| (Balanced parentheses)}. Il s'agit de trouver une chaîne qui est \emph{exactement} entre deux crochets (\emph{balanced brackets}). Une chaîne entre crochets commence donc par 
+%\lang{}{\todo{translate in english}Le motif suivant est plus complexe. Le code se base un des exemples donnés dans la  \href{http://www.inf.puc-rio.br/~roberto/lpeg/\#ex}{documentation de \verb|lpeg| (Balanced parentheses)}. Il s'agit de trouver une chaîne qui est \emph{exactement} entre deux crochets (\emph{balanced brackets}). Une chaîne entre crochets commence donc par 
 %\begin{enumerate}
 %\item un crochet gauche,
 %\item suivi de 0 ou plus répétitions de n'importe quoi sauf 1) des crochets (\verb|(1 - lpeg.S("[]"))|) ou 2) une chaine entre crochets (\verb|lpeg.V(1)|)
