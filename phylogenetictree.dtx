@@ -38,7 +38,7 @@ Theres's a french translation (in fact the original version!) Inside the dtx fil
 \fi
 %</internal>
 %<*install>
-\input docstrip.tex
+\input l3docstrip.tex
 \keepsilent
 \askforoverwritefalse
 \preamble
@@ -141,9 +141,11 @@ End of file `\outFileName'.^^J%
 \usepackage{fontspec}
 \usepackage{xifthen}
 \usepackage[backgroundcolor=white,linecolor=black,textsize=footnotesize,shadow]{todonotes}
+\usepackage{epigraph}
+\setlength{\epigraphwidth}{.55\linewidth}
 \usepackage{\jobname}
 \newcommand{\langue}{}
-\renewcommand{\langue}{}
+\renewcommand{\langue}{english}
 \ifthenelse{\equal{\langue}{english}}{\usepackage[english]{babel}}{\usepackage[frenchb]{babel}}
 \newcommand{\lang}[2]{\ifthenelse{\equal{\langue}{english}}{#1}{#2}}
 \begin{document}
@@ -211,7 +213,7 @@ End of file `\outFileName'.^^J%
 %
 %then in the tree file it is represented by the following sequence of printable characters:
 %
-%\begin{center}\centering\verb|(B,(A,C,E),D);|\end{center}
+%\begin{center}\verb|(B,(A,C,E),D);|\end{center}
 %
 %The tree ends with a semicolon. The bottommost node in this tree is an interior node, not a tip. Interior nodes are represented by a pair of matched parentheses. Between them are representations of the nodes that are immediately descended from that node, separated by commas. In the above tree, the immediate descendants are B, another interior node, and D. The other interior node is represented by a pair of parentheses, enclosing representations of its immediate descendants, A, C, and E. In our example these happen to be tips, but in general they could also be interior nodes and the result would be further nestings of parentheses, to any level.
 %
@@ -342,6 +344,12 @@ End of file `\outFileName'.^^J%
 %
 %\lang{\section{Gallery\label{gallery}}}{\section{Gallerie\label{gallery}}}
 %
+%\phylogenetictree{((raccoon: 19.19959, bear: 6.80041): 0.84600, ((sea lion: 11.99700, seal: 12.00300): 7.52973,((monkey: 100.85930, cat:47.14069): 20.59201, weasel: 18.87953): 2.09460): 3.87382, dog:25.46154);}
+%
+%\phylogenetictree{(Bovine: 0.69395, (Gibbon: 0.36079, (Orang: 0.33636, (Gorilla: 0.17147, (Chimp: 0.19268, Human: 0.11927): 0.08386): 0.06124): 0.15057): 0.54939, Mouse: 1.21460): 0.10;}
+%
+%\phylogenetictree{(Bovine: 0.69395, (Hylobates: 0.36079,(Pongo: 0.33636, (G._Gorilla: 0.17147, (P._paniscus: 0.19268, H._sapiens: 0.11927): 0.08386): 0.06124): 0.15057): 0.54939, Rodent: 1.21460);}
+%
 %^^A\phylogenetictree[distance=true,base width=0.05,base height=.5]{(('raccoon':19.19959,bear:6.80041):0.84600,((sea_lion:11.99700, seal:12.00300):7.52973,((monkey:100.85930,cat:47.14069):20.59201, weasel:18.87953):2.09460):3.87382,dog:25.46154);}
 %
 %^^A\input{example1.tree}
@@ -357,11 +365,7 @@ End of file `\outFileName'.^^J%
 %
 %\lang{\section{The Description of Macros}}{\section{Description des macros}}
 %
-%
-%    De L'Art poétique (1674)
-%
-%    Ce que l'on conçoit bien s'énonce clairement,
-%    Et les mots pour le dire arrivent aisément. (Chant I) 
+%\epigraph{Ce que l'on conçoit bien s'énonce clairement,\\ Et les mots pour le dire arrivent aisément.}{De L'Art poétique. Chant I (1674)\\ Nicolas \textsc{Boileau}}
 %
 %\lang{\subsection{The \LaTeX\ code}}{\subsection{Le code \LaTeX}}
 %
@@ -377,7 +381,7 @@ End of file `\outFileName'.^^J%
 %    \begin{macrocode}
 \RequirePackage{ifluatex}
 %    \end{macrocode}
-%\macro{tikz} \lang{If the format is not \LaTeX, generate an error. TikZ is loaded and comes with pgfkeys.}{Si \LaTeX\ n'est pas le format utilisé, une erreur est générée. Sinon TikZ est chargé --- ainsi que pgfkeys.}
+%\macro{tikz} \lang{If the format is not \LaTeX, generate an error otherwise TikZ is loaded and comes with pgfkeys.}{Si \LaTeX\ n'est pas le format utilisé, une erreur est générée, sinon TikZ est chargé --- ainsi que pgfkeys.}
 %    \begin{macrocode}
 \ifluatex
   \RequirePackage{tikz}
@@ -539,7 +543,7 @@ function NewickParser (newicktree)
     + rightparenthesis + colon + semicolon + comma)	
   local comments = lpeg.P(leftsquarebracket + rightsquarebracket)
 %    \end{macrocode}
-%\lang{}{\todo{translate in english}Le motif suivant est plus complexe. Le code se base un des exemples donnés dans la  \href{http://www.inf.puc-rio.br/~roberto/lpeg/\#ex}{documentation de \verb|lpeg| (Balanced parentheses)}. Il s'agit de trouver une chaîne qui est \emph{exactement} entre deux crochets (\emph{balanced brackets}). Une chaîne entre crochets commence donc par 
+%\lang{The following pattern is more complex. It is based on an example of the \href{http://www.inf.puc-rio.br/~roberto/lpeg/\#ex}{\verb|lpeg| documentation (Balanced parentheses)}}{\todo{translate in english}Le motif suivant est plus complexe. Le code se base un des exemples donnés dans la  \href{http://www.inf.puc-rio.br/~roberto/lpeg/\#ex}{documentation de \verb|lpeg| (Balanced parentheses)}. Il s'agit de trouver une chaîne qui est \emph{exactement} entre deux crochets (\emph{balanced brackets}). Une chaîne entre crochets commence donc par 
 %\begin{enumerate}
 %\item un crochet gauche,
 %\item suivi de 0 ou plus répétitions de n'importe quoi sauf 1) des crochets (\verb|(1 - lpeg.S("[]"))|) ou 2) une chaine entre crochets (\verb|lpeg.V(1)|)
@@ -751,7 +755,9 @@ function Table2FoldTree (node)
       coordinates["y"] = node[k]["y"]
     end
   end
-
+%    \end{macrocode}
+%\lang{Loop while parent is superior to 1}{}
+%    \begin{macrocode}
   -- boucle tant que parent est supérieur à 1
   while GetNum(parent) > 1 do 
     -- on réinitialise les tables temporaires
