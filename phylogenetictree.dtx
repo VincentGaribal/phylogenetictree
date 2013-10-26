@@ -145,7 +145,7 @@ End of file `\outFileName'.^^J%
 \setlength{\epigraphwidth}{.55\linewidth}
 \usepackage{\jobname}
 \newcommand{\langue}{}
-\renewcommand{\langue}{english}
+\renewcommand{\langue}{}
 \ifthenelse{\equal{\langue}{english}}{\usepackage[english]{babel}}{\usepackage[frenchb]{babel}}
 \newcommand{\lang}[2]{\ifthenelse{\equal{\langue}{english}}{#1}{#2}}
 \begin{document}
@@ -169,7 +169,7 @@ End of file `\outFileName'.^^J%
 %   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %   Right brace   \}     Tilde         \~}
 %\GetFileInfo{\jobname.sty}
-%\CheckSum{28}
+%\CheckSum{92}
 %
 %\DoNotIndex{\begin,\else,\end,\fi,\newcommand,\NeedsTeXFormat,\node,\PackageError,\ProvidesPackage,\RequirePackage,\scriptsize,\tikz,\pgfkeysvalueof}
 %
@@ -189,6 +189,7 @@ End of file `\outFileName'.^^J%
 %\lang{\changes{0.4c}{2013/07/08}{Change "pgfphylogenetictree" into "phylogenetictree"}}{\changes{0.4c}{2013/07/08}{Changement de nom : "phylogenetictree" à la place de pgfplylogenetictree}}
 %\lang{\changes{0.4d}{2013/07/09}{Simplify key/value definitions}}{\changes{0.4d}{09/07/2013}{Simplification des définitions clés/valeurs}}
 %\lang{\changes{0.4e}{2013/07/09}{Add Newick Format description}}{\changes{0.4e}{2013/07/09}{Ajout de la description du format Newick (en)}}
+%\changes{0.4f}{2013/10/26}{Replace \texttt{pgfkeys} by \texttt{l3keys}}
 %
 %\lang{\begin{abstract}
 %The \textsf{phylogenetictree} package allows representation of phylogenetic trees. It works only with Lua\TeX.
@@ -207,7 +208,7 @@ End of file `\outFileName'.^^J%
 %
 %\begin{center}
 %\begin{tikzpicture}[rotate=90]
-%\phylogenetictree[draw type=scope]{(B,(A,C,E),D);}
+%\phylogenetictree[draw_type=scope]{(B,(A,C,E),D);}
 %\end{tikzpicture}
 %\end{center}
 %
@@ -332,7 +333,7 @@ End of file `\outFileName'.^^J%
 %\lang{Let's start with an example:}{Commençons par un exemple :}
 %\begin{figure}[ht]
 %\centering
-%\phylogenetictree{((a,b),(c,(d,e)),f);}
+%\phylogenetictree[]{((a,b),(c,(d,e)),f);}
 %\lang{\caption[Example of a phylogenetic tree]{\label{ExampleStraightTree}Example of phylogenetic tree. This tree was drawn with no options:  \verb|phylogenetictree\{((a,b),(c,(d,e)),f);\}|}}{\caption[Exemple d'arbre phylogénétique]{\label{ExampleStraightTree}Exemple d'arbre phylogénétique. Cet arbre a été déssiné sans arguments optionnels :  \verb|phylogenetictree\{((a,b),(c,(d,e)),f);\}|}}
 %\end{figure}
 %
@@ -395,34 +396,82 @@ End of file `\outFileName'.^^J%
 %
 %\lang{}{Les valeurs données seront les valeurs par défaut. Elles sont utilisées lorsqu'on écrit un arbre sans argument par exemple.}
 %    \begin{macrocode}
-\pgfkeys{
-  /phylogenetic tree/.cd,
-  /draw type/.initial=standalone,
-  /tree type/.initial=straight,
-  /base width/.initial=1,
-  /base height/.initial=1,
-  /angle/.initial=90,
-  /distance/.initial=false,
-}
+\ExplSyntaxOn
+% keys
+\keys_define:nn { phylogenetictree }
+  {
+  draw_type .tl_set:N    =   \l_phylogenetictree_draw_type_tl,
+  tree_type .tl_set:N    =   \l_phylogenetictree_tree_type_tl,
+  base_width .tl_set:N   =   \l_phylogenetictree_base_width_tl,
+  base_height .tl_set:N  =   \l_phylogenetictree_base_height_tl,
+  angle .tl_set:N        =   \l_phylogenetictree_angle_tl,
+  distance .tl_set:N     =   \l_phylogenetictree_distance_tl
+  }
 %    \end{macrocode}
 %\begin{macro}{\phylogenetictree}
 %\lang{}{La macro \verb|phylogenetictree| passe ses arguments optionnels à \verb|pgfkeys| ; s'il en manque, il utilise les valeurs par défaut. Elle appelle ensuite \verb|directlua| et passe l'ensemble des arguments dans une table lua. Enfin elle execute le fichier \verb|phylogenetictree.lua| qui contient l'ensemble des fonctions lua. Comme on travaille dans le même «chunk» lua, les valeurs passées sont toujours présentes lors de l'exécution du fichier.}
 %    \begin{macrocode}
-\newcommand{\phylogenetictree}[2][]{%
-  \pgfkeys{#1}
-  \directlua{%
-    arguments = {%
-      ["draw type"] = "\pgfkeysvalueof{/draw type}",
-      ["tree type"] = "\pgfkeysvalueof{/tree type}",
-      dx = \pgfkeysvalueof{/base width},
-      dy = \pgfkeysvalueof{/base height},
-      angle = \pgfkeysvalueof{/angle},
-      distance = \pgfkeysvalueof{/distance},
-      tree = "#2"
-    }
-    dofile("phylogenetictree.lua")
+% Internals
+\cs_new:Npn \phylogenetictree_get_parameters:n #1
+  {
+  \group_begin:
+  \prop_clear_new:N \g_phylogenetictree_prop
+  \keys_set:nn { phylogenetictree } { #1 }
+  \tl_if_blank:VTF % draw type default : standalone
+    { \l_phylogenetictree_draw_type_tl }
+    { \prop_gput:Nnn \g_phylogenetictree_prop   { draw_type }    { standalone } }
+    { \prop_gput:NnV \g_phylogenetictree_prop   { draw_type }    \l_phylogenetictree_draw_type_tl }
+  \tl_if_blank:VTF % tree type default : straight
+    { \l_phylogenetictree_tree_type_tl }
+    { \prop_gput:Nnn \g_phylogenetictree_prop   { tree_type }    { straight } }
+    { \prop_gput:NnV \g_phylogenetictree_prop   { tree_type }    \l_phylogenetictree_tree_type_tl }
+  \tl_if_blank:VTF % base width default : 1
+    { \l_phylogenetictree_base_width_tl }
+    { \prop_gput:Nnn \g_phylogenetictree_prop   { base_width }   { 1 } }
+    { \prop_gput:NnV \g_phylogenetictree_prop   { base_width }   \l_phylogenetictree_base_width_tl }
+  \tl_if_blank:VTF % base height default : 1
+    { \l_phylogenetictree_base_height_tl }
+    { \prop_gput:Nnn \g_phylogenetictree_prop   { base_height }  { 1 } }
+    { \prop_gput:NnV \g_phylogenetictree_prop   { base_height }  \l_phylogenetictree_base_height_tl }
+  \tl_if_blank:VTF % angle default : 90
+    { \l_phylogenetictree_angle_tl }
+    { \prop_gput:Nnn \g_phylogenetictree_prop   { angle }        { 90 } }
+    { \prop_gput:NnV \g_phylogenetictree_prop   { angle }        \l_phylogenetictree_angle_tl }
+  \tl_if_blank:VTF % distance default : false
+    { \l_phylogenetictree_distance_tl }
+    { \prop_gput:Nnn \g_phylogenetictree_prop   { distance }     { false } }
+    { \prop_gput:NnV \g_phylogenetictree_prop   { distance }     \l_phylogenetictree_distance_tl }
+  \group_end:
   }
-}
+
+\cs_new:Npn \phylogenetictree_get_value:n #1
+  { \prop_get:Nn \g_phylogenetictree_prop { #1 } }
+
+\cs_new_protected:Npn \phylogenetictree_pass_to_lua:n #1
+  {
+  \lua_now_x:n
+    {
+    arguments = 
+      {
+      ["draw type"] = \phylogenetictree_get_value:n { draw_type },
+      ["tree type"] = \phylogenetictree_get_value:n { tree_type },
+      dx = \phylogenetictree_get_value:n { base_width },
+      dy = \phylogenetictree_get_value:n { base_height },
+      angle = \phylogenetictree_get_value:n { angle },
+      distance = \phylogenetictree_get_value:n { distance },
+      tree = "#1"
+      }
+    dofile("phylogenetictree.lua")
+    }
+  }
+
+% User level
+\NewDocumentCommand{\phylogenetictree}{ d[] m }
+  {
+  \phylogenetictree_get_parameters:n { #1 }
+  \phylogenetictree_pass_to_lua:n { #2 }
+  }
+\ExplSyntaxOff
 %    \end{macrocode}
 %\end{macro}
 %\iffalse
@@ -967,6 +1016,9 @@ function TikzDraw (tree)
 	elseif arguments["draw type"] == "scope" then
 		starttikzenv = [[\begin{scope}]]
 		endtikzenv = [[\end{scope}]]
+    else
+        starttikzenv = arguments["draw type"]
+        endtikzenv = arguments["tree type"]
 	end
 
 	tex.print(starttikzenv)
@@ -991,7 +1043,8 @@ function TikzDraw (tree)
 end
 
 ReadFile(arguments["tree"])
-TikzDraw(NewickParser(arguments["tree"]))
+print("Le contenu de draw type est : " .. arguments["draw type"])
+%TikzDraw(NewickParser(arguments["tree"]))
 %    \end{macrocode}
 %\iffalse
 %</lua>
