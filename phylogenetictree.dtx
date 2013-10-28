@@ -63,7 +63,7 @@ Released under the LaTeX Project Public License v1.3c or later^^J%
 See http://www.latex-project.org/lppl.txt^^J%
 --]]^^J^^J^^J}
 \postamble
-Copyright (C) 2012 by 
+Copyright (C) 2012 2013 by 
     Vincent Garibal <vincent.garibal@gmail.com>
 
 It may be distributed and/or modified under the conditions of
@@ -85,7 +85,7 @@ and the derived files
 \endpostamble
 \edef\luapostamble{^^J^^J^^J%
 --[[^^J%
-Copyright (C) 2012 by^^J%
+Copyright (C) 2012 2013 by^^J%
 Vincent Garibal <vincent.garibal@gmail.com>^^J%
 ^^J%
 It may be distributed and/or modified under the conditions of^^J%
@@ -139,15 +139,10 @@ End of file `\outFileName'.^^J%
 %<*driver>
 \documentclass{ltxdoc}
 \usepackage{fontspec}
-\usepackage{xifthen}
 \usepackage[backgroundcolor=white,linecolor=black,textsize=footnotesize,shadow]{todonotes}
 \usepackage{epigraph}
 \setlength{\epigraphwidth}{.55\linewidth}
 \usepackage{\jobname}
-\newcommand{\langue}{}
-\renewcommand{\langue}{}
-\ifthenelse{\equal{\langue}{english}}{\usepackage[english]{babel}}{\usepackage[frenchb]{babel}}
-\newcommand{\lang}[2]{\ifthenelse{\equal{\langue}{english}}{#1}{#2}}
 \begin{document}
 \DocInput{\jobname.dtx}
 \end{document}
@@ -169,13 +164,11 @@ End of file `\outFileName'.^^J%
 %   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %   Right brace   \}     Tilde         \~}
 %\GetFileInfo{\jobname.sty}
-%\CheckSum{92}
+%\CheckSum{72}
 %
 %\DoNotIndex{\begin,\else,\end,\fi,\newcommand,\NeedsTeXFormat,\node,\PackageError,\ProvidesPackage,\RequirePackage,\scriptsize,\tikz,\pgfkeysvalueof}
 %
-%\lang{^^A
-%\title{\textsf{phylogenetictree} --- Draw phylogenetic trees\thanks{This file describes version \fileversion, last modified \filedate.}}}^^A
-%{\title{\textsf{phylogenetictree} --- Dessiner des arbres phylogénétiques\thanks{Ce fichier décrit la version \fileversion, modifiée le \filedate.}}}
+%\title{\textsf{phylogenetictree} --- Draw phylogenetic trees\thanks{This file describes version \fileversion, last modified \filedate.}}
 %
 %\author{Vincent Garibal\thanks{E-mail: vincent.garibal@gmail.com}}
 %
@@ -183,24 +176,21 @@ End of file `\outFileName'.^^J%
 %
 %\maketitle
 %
-%\lang{\changes{0.1}{2013/02/25}{Separate code and user informations}}{\changes{0.1}{2013/02/25}{Séparation du code et de la documentation}}
-%\lang{\changes{0.4a}{2012/07/19}{Rewrite of the module into a single dtx file}}{\changes{0.4a}{2012/07/19}{Réécriture du module sous la forme d'un seul fichier dtx}}
-%\lang{\changes{0.4b}{2013/07/08}{Put ltxdoc.cfg inside dtx file}}{\changes{0.4b}{2013/07/08}{Insertion de ltxdoc.cfg dans le fichier dtx}}
-%\lang{\changes{0.4c}{2013/07/08}{Change "pgfphylogenetictree" into "phylogenetictree"}}{\changes{0.4c}{2013/07/08}{Changement de nom : "phylogenetictree" à la place de pgfplylogenetictree}}
-%\lang{\changes{0.4d}{2013/07/09}{Simplify key/value definitions}}{\changes{0.4d}{09/07/2013}{Simplification des définitions clés/valeurs}}
-%\lang{\changes{0.4e}{2013/07/09}{Add Newick Format description}}{\changes{0.4e}{2013/07/09}{Ajout de la description du format Newick (en)}}
+%\changes{0.1}{2013/02/25}{Separate code and user informations}
+%\changes{0.4a}{2012/07/19}{Rewrite of the module into a single dtx file}
+%\changes{0.4b}{2013/07/08}{Put ltxdoc.cfg inside dtx file}
+%\changes{0.4c}{2013/07/08}{Change "pgfphylogenetictree" into "phylogenetictree"}
+%\changes{0.4d}{2013/07/09}{Simplify key/value definitions}
+%\changes{0.4e}{2013/07/09}{Add Newick Format description}
 %\changes{0.4f}{2013/10/26}{Replace \texttt{pgfkeys} by \texttt{l3keys}}
 %
-%\lang{\begin{abstract}
-%The \textsf{phylogenetictree} package allows representation of phylogenetic trees. It works only with Lua\TeX.
-%\end{abstract}}
-%{\begin{abstract}
-%Le paquet \textsf{phylogenetictree} permet de représenter des arbres phylogénétiques. Il ne fonctionne qu'avec Lua\TeX.
-%\end{abstract}}
+%\begin{abstract}
+%The \textsf{phylogenetictree} package allows representation of phylogenetic trees. It works only with Lua\TeX (for the moment).
+%\end{abstract}
 %
 %\tableofcontents
 %
-%\lang{\section[The Newick tree format]{The Newick tree format\footnote{\url{http://evolution.genetics.washington.edu/phylip/newicktree.html}}}{}
+%\section[The Newick tree format]{The Newick tree format\footnote{\url{http://evolution.genetics.washington.edu/phylip/newicktree.html}}}
 %
 %\subsection{Introduction}
 %
@@ -319,37 +309,37 @@ End of file `\outFileName'.^^J%
 %
 %Gary Olsen has produced a formal description of it which is available \href{http://evolution.genetics.washington.edu/phylip/newick\_doc.html}{here}.
 %
-%There is a Wikipedia page on the Newick Standard available \href{http://en.wikipedia.org/wiki/Newick_format}{here}.}{\section[Le format d'arbre Newick]{Le format d'arbre Newick\footnote{\url{http://evolution.genetics.washington.edu/phylip/newicktree.html}}}}
+%There is a Wikipedia page on the Newick Standard available \href{http://en.wikipedia.org/wiki/Newick_format}{here}.
 %
-%\lang{\section{User interface}}{\section{Interface utilisateur}}
+%\section{User interface}
 %
-%\lang{\subsection{Main function}}{\subsection{Fonction principale}}
+%\subsection{Main function}
 %
 %\DescribeMacro{\phylogenetictree}
-%\lang{This is the most important command for drawing phylogenetic trees. It takes one mandatory argument and several optional arguments, in the form of key/value pairs.}{Il s'agit de la fonction la plus importante pour dessiner des arbres phylogénétiques. Elle n'a qu'un seul argument obligatoire mais plusieurs arguments optionnels sous la forme de paires clé/valeur.}
+%This is the most important command for drawing phylogenetic trees. It takes one mandatory argument and several optional arguments, in the form of key/value pairs.
 %
-%\lang{The mandatory argument is the tree's code. It can be directly the code or a filename in which there's the code.}{L'argument obligatoire est le code de l'arbre ; il peut s'agir directement du code ou bien du nom d'un fichier qui contient le code.}
+%The mandatory argument is the tree's code. It can be directly the code or a filename in which there's the code.
 %
-%\lang{Let's start with an example:}{Commençons par un exemple :}
+%Let's start with an example:
 %\begin{figure}[ht]
 %\centering
 %\phylogenetictree[]{((a,b),(c,(d,e)),f);}
-%\lang{\caption[Example of a phylogenetic tree]{\label{ExampleStraightTree}Example of phylogenetic tree. This tree was drawn with no options:  \verb|phylogenetictree\{((a,b),(c,(d,e)),f);\}|}}{\caption[Exemple d'arbre phylogénétique]{\label{ExampleStraightTree}Exemple d'arbre phylogénétique. Cet arbre a été déssiné sans arguments optionnels :  \verb|phylogenetictree\{((a,b),(c,(d,e)),f);\}|}}
+%\caption[Example of a phylogenetic tree]{\label{ExampleStraightTree}Example of phylogenetic tree. This tree was drawn with no options:  \verb|phylogenetictree\{((a,b),(c,(d,e)),f);\}|}
 %\end{figure}
 %
-%\lang{\subsection{Optional arguments}}{\subsection{Arguments optionnels}}
+%\subsection{Optional arguments}
 %
-%\DescribeMacro{draw type}\hfill \lang{default:}{défaut :} standalone
+%\DescribeMacro{draw type}\hfill default: standalone
 %
-%\lang{}{\verb|draw type| prend deux valeurs : \verb|standalone| qui est la valeur par défaut et qui correspond à un arbre encapsulé à l'intérieur d'un \verb|tikzpicture| ; \verb|scope| si l'on souhaite intégré l'arbre dans un \verb|tikzpicture|.}
+%\todo{translate}\verb|draw type| prend deux valeurs : \verb|standalone| qui est la valeur par défaut et qui correspond à un arbre encapsulé à l'intérieur d'un \verb|tikzpicture| ; \verb|scope| si l'on souhaite intégré l'arbre dans un \verb|tikzpicture|.
 %
-%\lang{\section{Gallery\label{gallery}}}{\section{Gallerie\label{gallery}}}
+%\section{Gallery\label{gallery}}
 %
-%\phylogenetictree{((raccoon: 19.19959, bear: 6.80041): 0.84600, ((sea lion: 11.99700, seal: 12.00300): 7.52973,((monkey: 100.85930, cat:47.14069): 20.59201, weasel: 18.87953): 2.09460): 3.87382, dog:25.46154);}
+%^^A\phylogenetictree{((raccoon: 19.19959, bear: 6.80041): 0.84600, ((sea lion: 11.99700, seal: 12.00300): 7.52973,((monkey: 100.85930, cat:47.14069): 20.59201, weasel: 18.87953): 2.09460): 3.87382, dog:25.46154);}
 %
-%\phylogenetictree{(Bovine: 0.69395, (Gibbon: 0.36079, (Orang: 0.33636, (Gorilla: 0.17147, (Chimp: 0.19268, Human: 0.11927): 0.08386): 0.06124): 0.15057): 0.54939, Mouse: 1.21460): 0.10;}
+%^^A\phylogenetictree{(Bovine: 0.69395, (Gibbon: 0.36079, (Orang: 0.33636, (Gorilla: 0.17147, (Chimp: 0.19268, Human: 0.11927): 0.08386): 0.06124): 0.15057): 0.54939, Mouse: 1.21460): 0.10;}
 %
-%\phylogenetictree{(Bovine: 0.69395, (Hylobates: 0.36079,(Pongo: 0.33636, (G._Gorilla: 0.17147, (P._paniscus: 0.19268, H._sapiens: 0.11927): 0.08386): 0.06124): 0.15057): 0.54939, Rodent: 1.21460);}
+%^^A\phylogenetictree{(Bovine: 0.69395, (Hylobates: 0.36079,(Pongo: 0.33636, (G._Gorilla: 0.17147, (P._paniscus: 0.19268, H._sapiens: 0.11927): 0.08386): 0.06124): 0.15057): 0.54939, Rodent: 1.21460);}
 %
 %^^A\phylogenetictree[distance=true,base width=0.05,base height=.5]{(('raccoon':19.19959,bear:6.80041):0.84600,((sea_lion:11.99700, seal:12.00300):7.52973,((monkey:100.85930,cat:47.14069):20.59201, weasel:18.87953):2.09460):3.87382,dog:25.46154);}
 %
@@ -359,30 +349,35 @@ End of file `\outFileName'.^^J%
 %  \PrintIndex
 %  \PrintChanges
 %}
+%    
+%    \begin{macrocode}
+%<@@=phylogenetictree>
+%    \end{macrocode}
 %
 %\iffalse
 %<*package>
 %\fi
 %
-%\lang{\section{The Description of Macros}}{\section{Description des macros}}
+%\section{The Description of Macros}
 %
 %\epigraph{Ce que l'on conçoit bien s'énonce clairement,\\ Et les mots pour le dire arrivent aisément.}{De L'Art poétique. Chant I (1674)\\ Nicolas \textsc{Boileau}}
 %
-%\lang{\subsection{The \LaTeX\ code}}{\subsection{Le code \LaTeX}}
+%\subsection{The \LaTeX\ code}
 %
-%\lang{\subsubsection{Definitions and packages loading}}{\subsubsection{Définitions et chargement des paquets}}
+%\subsubsection{Definitions and packages loading}
 %
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{phylogenetictree}
-  [2013/07/09 0.4d Draw phylogenetic trees]
+\ProvidesExplPackage {phylogenetictree} {2013/10/26} {0.4f}
+  {Draw phylogenetic trees}
+%\ProvidesPackage{phylogenetictree}[2013/07/09 0.4d Draw phylogenetic trees]
 %    \end{macrocode}
 %\macro{ifluatex}
-%\lang{Ifluatex switch loading.}{Chargement du paquet ifluatex.}
+%Ifluatex switch loading.
 %    \begin{macrocode}
 \RequirePackage{ifluatex}
 %    \end{macrocode}
-%\macro{tikz} \lang{If the format is not \LaTeX, generate an error otherwise TikZ is loaded and comes with pgfkeys.}{Si \LaTeX\ n'est pas le format utilisé, une erreur est générée, sinon TikZ est chargé --- ainsi que pgfkeys.}
+%\macro{tikz} If the format is not \LaTeX, generate an error otherwise TikZ is loaded and comes with pgfkeys.
 %    \begin{macrocode}
 \ifluatex
   \RequirePackage{tikz}
@@ -392,85 +387,84 @@ End of file `\outFileName'.^^J%
   {Switch your engine to luatex}
 \fi
 %    \end{macrocode}
-%\lang{\subsubsection{Key/value definitions}}{\subsubsection{Définition des clés/valeurs}}
+%\subsubsection{Key/value definitions}
 %
-%\lang{}{Les valeurs données seront les valeurs par défaut. Elles sont utilisées lorsqu'on écrit un arbre sans argument par exemple.}
+%Property list with the default values of the differents keys
+%
 %    \begin{macrocode}
 \ExplSyntaxOn
-% keys
-\keys_define:nn { phylogenetictree }
-  {
-  draw_type .tl_set:N    =   \l_phylogenetictree_draw_type_tl,
-  tree_type .tl_set:N    =   \l_phylogenetictree_tree_type_tl,
-  base_width .tl_set:N   =   \l_phylogenetictree_base_width_tl,
-  base_height .tl_set:N  =   \l_phylogenetictree_base_height_tl,
-  angle .tl_set:N        =   \l_phylogenetictree_angle_tl,
-  distance .tl_set:N     =   \l_phylogenetictree_distance_tl
-  }
+\prop_new:N   \g_@@_defaults_prop 
+\prop_put:Nnn \g_@@_defaults_prop { draw_type }   { standalone }
+\prop_put:Nnn \g_@@_defaults_prop { tree_type }   { straight }
+\prop_put:Nnn \g_@@_defaults_prop { base_width }  { 1 }
+\prop_put:Nnn \g_@@_defaults_prop { base_height } { 1 }
+\prop_put:Nnn \g_@@_defaults_prop { angle }       { 90 }
+\prop_put:Nnn \g_@@_defaults_prop { distance }    { false }
 %    \end{macrocode}
-%\begin{macro}{\phylogenetictree}
-%\lang{}{La macro \verb|phylogenetictree| passe ses arguments optionnels à \verb|pgfkeys| ; s'il en manque, il utilise les valeurs par défaut. Elle appelle ensuite \verb|directlua| et passe l'ensemble des arguments dans une table lua. Enfin elle execute le fichier \verb|phylogenetictree.lua| qui contient l'ensemble des fonctions lua. Comme on travaille dans le même «chunk» lua, les valeurs passées sont toujours présentes lors de l'exécution du fichier.}
+%
+%Each key/val pair is associated with a token list.
+%
 %    \begin{macrocode}
-% Internals
-\cs_new:Npn \phylogenetictree_get_parameters:n #1
+\prop_map_inline:Nn \g_@@_defaults_prop
+{
+  \keys_define:nn { phylogenetictree }
   {
-  \group_begin:
-  \prop_clear_new:N \g_phylogenetictree_prop
+    #1 .tl_gset:c = { l_@@_#1_tl }
+  }
+}
+%    \end{macrocode}
+%\subsubsection{Internal functions}
+%    \begin{macrocode}
+\cs_new:Npn \@@_get_parameters:n #1 
+{
+  \prop_clear_new:N \g_@@_prop
   \keys_set:nn { phylogenetictree } { #1 }
-  \tl_if_blank:VTF % draw type default : standalone
-    { \l_phylogenetictree_draw_type_tl }
-    { \prop_gput:Nnn \g_phylogenetictree_prop   { draw_type }    { standalone } }
-    { \prop_gput:NnV \g_phylogenetictree_prop   { draw_type }    \l_phylogenetictree_draw_type_tl }
-  \tl_if_blank:VTF % tree type default : straight
-    { \l_phylogenetictree_tree_type_tl }
-    { \prop_gput:Nnn \g_phylogenetictree_prop   { tree_type }    { straight } }
-    { \prop_gput:NnV \g_phylogenetictree_prop   { tree_type }    \l_phylogenetictree_tree_type_tl }
-  \tl_if_blank:VTF % base width default : 1
-    { \l_phylogenetictree_base_width_tl }
-    { \prop_gput:Nnn \g_phylogenetictree_prop   { base_width }   { 1 } }
-    { \prop_gput:NnV \g_phylogenetictree_prop   { base_width }   \l_phylogenetictree_base_width_tl }
-  \tl_if_blank:VTF % base height default : 1
-    { \l_phylogenetictree_base_height_tl }
-    { \prop_gput:Nnn \g_phylogenetictree_prop   { base_height }  { 1 } }
-    { \prop_gput:NnV \g_phylogenetictree_prop   { base_height }  \l_phylogenetictree_base_height_tl }
-  \tl_if_blank:VTF % angle default : 90
-    { \l_phylogenetictree_angle_tl }
-    { \prop_gput:Nnn \g_phylogenetictree_prop   { angle }        { 90 } }
-    { \prop_gput:NnV \g_phylogenetictree_prop   { angle }        \l_phylogenetictree_angle_tl }
-  \tl_if_blank:VTF % distance default : false
-    { \l_phylogenetictree_distance_tl }
-    { \prop_gput:Nnn \g_phylogenetictree_prop   { distance }     { false } }
-    { \prop_gput:NnV \g_phylogenetictree_prop   { distance }     \l_phylogenetictree_distance_tl }
-  \group_end:
-  }
-
-\cs_new:Npn \phylogenetictree_get_value:n #1
-  { \prop_get:Nn \g_phylogenetictree_prop { #1 } }
-
-\cs_new_protected:Npn \phylogenetictree_pass_to_lua:n #1
+  \prop_map_inline:Nn \g_@@_defaults_prop
   {
-  \lua_now_x:n
-    {
+    \tl_clear_new:N \l_@@_tmpa_tl
+    \tl_set_eq:Nc 
+      \l_@@_tmpa_tl 
+      { l_@@_##1_tl }
+    \tl_if_blank:VTF
+      \l_@@_tmpa_tl
+      { \prop_gput:Nnn \g_@@_prop { ##1 } { ##2 } }
+      { \prop_gput:NnV \g_@@_prop { ##1 } \l_@@_tmpa_tl }
+  }
+}
+%    \end{macrocode}
+%    \begin{macrocode}
+
+\cs_new:Npn \@@_get_value:n #1 
+{
+  \prop_get:Nn \g_@@_prop { #1 }
+}
+
+\cs_new_protected:Npn \@@_pass_to_lua:n #1 
+{
+  \lua_now_x:n 
+  {
     arguments = 
-      {
-      ["draw type"] = \phylogenetictree_get_value:n { draw_type },
-      ["tree type"] = \phylogenetictree_get_value:n { tree_type },
-      dx = \phylogenetictree_get_value:n { base_width },
-      dy = \phylogenetictree_get_value:n { base_height },
-      angle = \phylogenetictree_get_value:n { angle },
-      distance = \phylogenetictree_get_value:n { distance },
-      tree = "#1"
-      }
-    dofile("phylogenetictree.lua")
+    {
+      ["draw type"] = \@@_get_value:n { draw_type },
+      ["tree type"] = \@@_get_value:n { tree_type },
+      dx            = \@@_get_value:n { base_width },
+      dy            = \@@_get_value:n { base_height },
+      angle         = \@@_get_value:n { angle },
+      distance      = \@@_get_value:n { distance },
+      tree          = "#1"
     }
+    dofile("phylogenetictree.lua")
   }
-
-% User level
-\NewDocumentCommand{\phylogenetictree}{ d[] m }
-  {
-  \phylogenetictree_get_parameters:n { #1 }
-  \phylogenetictree_pass_to_lua:n { #2 }
-  }
+}
+%    \end{macrocode}
+%\subsubsection{User level function}
+%\begin{macro}{\phylogenetictree}
+%Key/val options are given between brackets (first argument). The tree is the second argument.
+%    \begin{macrocode}
+\NewDocumentCommand{\phylogenetictree}{ d[] m } {
+  \@@_get_parameters:n { #1 }
+  \@@_pass_to_lua:n { #2 }
+}
 \ExplSyntaxOff
 %    \end{macrocode}
 %\end{macro}
@@ -479,19 +473,19 @@ End of file `\outFileName'.^^J%
 %<*lua>
 %\fi
 %
-%\lang{\subsection{The Lua Code}}{\subsection{Le code Lua}}
+%\subsection{The Lua Code}
 %
 %\macro{lpeg}
-%\lang{The \verb|lpeg| module is required because Newick parser is written using it.}{Le module \verb|lpeg| est nécessaire puisque le parser Newick est écrit avec.}
+%The \verb|lpeg| module is required because Newick parser is written using it.
 %    \begin{macrocode}
 -- lpeg module
 require "lpeg"
 %    \end{macrocode}
 %
-%\lang{\subsubsection{Auxiliary functions}}{\subsubsection{Fonctions auxiliaires}}
+%\subsubsection{Auxiliary functions}
 %
 %\macro{ReadFile}
-%\lang{The \verb|ReadFile| function checks if the argument of \verb|phylogenetictree| is a string or a filename. In the latter case, the file is open, and the newick tree is copied into \verb|arguments["tree"]|.}{La fonction \verb|ReadFile| teste si l'argument de \verb|phylogenetictree| (qui a été passé à lua sans changement) est une chaîne de caractères ou un nom de fichier. Dans ce cas, le fichier est lu et le code de l'arbre est copié dans  \verb|arguments["tree"]|.}
+%The \verb|ReadFile| function checks if the argument of \verb|phylogenetictree| is a string or a filename. In the latter case, the file is open, and the newick tree is copied into \verb|arguments["tree"]|.
 %    \begin{macrocode}
 -- ReadFile function
 -- Check if the tree is a string or a file
@@ -511,7 +505,7 @@ function ReadFile (newicktree)
 end
 %    \end{macrocode}
 %\begin{macro}{FindAllLeaves}
-%\lang{The \verb|FindAllLeaves| function finds all leaves of a tree associated with a particular node. It's a recursive function. It takes three arguments : }{La fonction \verb|FindAllLeaves| trouve puis copie toutes les feuilles associées à un nœud parent particulier. C'est une fonction récursive. Elle prend trois arguments : \verb|tree|, la table contenant le code de l'arbre parsé ; \verb|leaves|, une table dans laquelle sera écrit l'ensemble des feuilles ; \verb|parent|, un nœud parent.}
+%La fonction \verb|FindAllLeaves| trouve puis copie toutes les feuilles associées à un nœud parent particulier. C'est une fonction récursive. Elle prend trois arguments : \verb|tree|, la table contenant le code de l'arbre parsé ; \verb|leaves|, une table dans laquelle sera écrit l'ensemble des feuilles ; \verb|parent|, un nœud parent.
 %    \begin{macrocode}
 -- FindAllLeaves function (recursive)
 -- Finds all leaves of a tree associated with a particular node
@@ -527,7 +521,7 @@ end
 %    \end{macrocode}
 %\end{macro}
 %\begin{macro}{GetNum}
-%\lang{The \verb|Getnum| function gives the total number of entries in an indexed table.}{La fonction \verb|Getnum| donne le nombre total d'entrées dans une table indexée.}
+%The \verb|Getnum| function gives the total number of entries in an indexed table.
 %    \begin{macrocode}
 -- GetNum function
 -- Give the total number of entries in an indexed table
@@ -541,7 +535,7 @@ end
 %    \end{macrocode}
 %\end{macro}
 %\begin{macro}{Gsub}
-%\lang{The \verb|Gsub| function (\href{http://www.inf.puc-rio.br/~roberto/lpeg/\#ex}{lpeg documentation}) is an implementation of the \verb|string.gsub| function (plain lua) with \verb|lpeg|.}{La fonction \verb|Gsub| (\href{http://www.inf.puc-rio.br/~roberto/lpeg/\#ex}{documentation de lpeg}) implémente la fonction \verb|string.gsub| (plain lua) avec \verb|lpeg|.}
+%The \verb|Gsub| function (\href{http://www.inf.puc-rio.br/~roberto/lpeg/\#ex}{lpeg documentation}) is an implementation of the \verb|string.gsub| function (plain lua) with \verb|lpeg|.
 %    \begin{macrocode}
 -- Gsub function
 -- Implementation of the string.gsub function (plain lua) with lpeg
@@ -554,13 +548,13 @@ end
 %\end{macro}
 %\subsubsection{Newick Parser}
 %\begin{macro}{NewickParser}
-%\todo{find a better algorithm}\lang{The \verb|NewickParser| function transforms inline Newick notation into a table.}{La fonction \verb|NewickParser| transforme la notation Newick en table.}
+%\todo{find a better algorithm}The \verb|NewickParser| function transforms inline Newick notation into a table.
 %    \begin{macrocode}
 -- NewickParser function
 -- Transforms inline Newick notation into a table
 function NewickParser (newicktree)
 %    \end{macrocode}
-%\lang{\paragraph{Variables declarations}}{\paragraph{Déclaration des variables}}
+%\paragraph{Variables declarations}
 %    \begin{macrocode}
   -- variable declarations
   local node = {}
@@ -570,7 +564,7 @@ function NewickParser (newicktree)
   local parent_node = 0
   local counter = 1
 %    \end{macrocode}
-%\lang{Pattern definitions: declaration of all the symbols used by Newick format.}{\paragraph{Déclaration des motifs de recherche} Pour chacun des symboles de la grammaire Newick, on déclare une variable.}
+%Pattern definitions: declaration of all the symbols used by Newick format.
 %    \begin{macrocode}
   -- Newick grammar
   local space = lpeg.P(" ")
@@ -592,12 +586,12 @@ function NewickParser (newicktree)
     + rightparenthesis + colon + semicolon + comma)	
   local comments = lpeg.P(leftsquarebracket + rightsquarebracket)
 %    \end{macrocode}
-%\lang{The following pattern is more complex. It is based on an example of the \href{http://www.inf.puc-rio.br/~roberto/lpeg/\#ex}{\verb|lpeg| documentation (Balanced parentheses)}}{\todo{translate in english}Le motif suivant est plus complexe. Le code se base un des exemples donnés dans la  \href{http://www.inf.puc-rio.br/~roberto/lpeg/\#ex}{documentation de \verb|lpeg| (Balanced parentheses)}. Il s'agit de trouver une chaîne qui est \emph{exactement} entre deux crochets (\emph{balanced brackets}). Une chaîne entre crochets commence donc par 
+%\todo{translate}Le motif suivant est plus complexe. Le code se base un des exemples donnés dans la  \href{http://www.inf.puc-rio.br/~roberto/lpeg/\#ex}{documentation de \verb|lpeg| (Balanced parentheses)}. Il s'agit de trouver une chaîne qui est \emph{exactement} entre deux crochets (\emph{balanced brackets}). Une chaîne entre crochets commence donc par 
 %\begin{enumerate}
 %\item un crochet gauche,
 %\item suivi de 0 ou plus répétitions de n'importe quoi sauf 1) des crochets (\verb|(1 - lpeg.S("[]"))|) ou 2) une chaine entre crochets (\verb|lpeg.V(1)|)
 %\item et terminé par un crochet droit.
-%\end{enumerate}}
+%\end{enumerate}
 %    \begin{macrocode}
   local balancedcommentpattern = lpeg.P{
     leftsquarebracket * 
@@ -605,7 +599,7 @@ function NewickParser (newicktree)
     * rightsquarebracket
   }
 %    \end{macrocode}
-%\lang{}{Le motif pour les guillemets simples est construit de la même façon que le motif précédent pour les crochets.}
+%\todo{translate}Le motif pour les guillemets simples est construit de la même façon que le motif précédent pour les crochets.
 %    \begin{macrocode}
   local balancedsinglequotepattern = lpeg.P{
     singlequote * 
@@ -613,7 +607,7 @@ function NewickParser (newicktree)
     * singlequote
   }
 %    \end{macrocode}
-%\lang{}{Le motif pour les guillemets doubles est construit de la même façon que le motif précédent pour les crochets.}
+%\todo{translate}Le motif pour les guillemets doubles est construit de la même façon que le motif précédent pour les crochets.
 %    \begin{macrocode}
   local balanceddoublequotepattern = lpeg.P{
     doublequote * 
@@ -621,14 +615,14 @@ function NewickParser (newicktree)
     * doublequote
   }
 %    \end{macrocode}
-%\lang{\paragraph{Convert inline tree into a table}}{\paragraph{Conversion de l'arbre en table}\todo{Is it possible to do this with only 1 table?}}
+%\paragraph{Convert inline tree into a table}
 %
-%\lang{While the counter's value is smaller than the string's length, the loop continues.}{Tant que la valeur du compteur est inférieure à la longueur totale du code de l'arbre, la boucle continue.}
+%While the counter's value is smaller than the string's length, the loop continues.
 %    \begin{macrocode}
   -- copy Newick's characters into the table
   while counter <= string.len(newicktree) do
 %    \end{macrocode}
-%\lang{If the character is one of the Newick's grammar, it is moved into the table and the counter is incremented by one.}{Si le caractère correspond à un motif de la grammaire, on copie ce motif dans la table temporaire et on incrémente le compteur de 1.}
+%If the character is one of the Newick's grammar, it is moved into the table and the counter is incremented by one.
 %    \begin{macrocode}
     if lpeg.match(NewickPunctuation,newicktree,counter) then
       table.insert(
@@ -638,13 +632,13 @@ function NewickParser (newicktree)
       )
       counter = counter + 1
 %    \end{macrocode}
-%\lang{If the character is a "[", it means there's a comment. It removes everything between "[" and "]" and the characters themselves.}{Si le caractère est un "[" cela marque le début d'un commentaire.}
+%If the character is a "[", it means there's a comment. It removes everything between "[" and "]" and the characters themselves.
 %    \begin{macrocode}
     -- matches comments
     elseif lpeg.match(balancedcommentpattern,newicktree,counter) then
       counter = lpeg.match(balancedcommentpattern,newicktree,counter+1)
 %    \end{macrocode}
-%\todo{translate in french}If the character is a ' or a ", it means there's a label. It matches everything between \texttt{'} and \texttt{'}.
+%If the character is a ' or a ", it means there's a label. It matches everything between \texttt{'} and \texttt{'}.
 %    \begin{macrocode}
     -- matches labels
     elseif lpeg.match(balancedsinglequotepattern,newicktree,counter) then
@@ -653,14 +647,14 @@ function NewickParser (newicktree)
       counter = lpeg.match(balancedsinglequotepattern,newicktree,counter+1)
 
 %    \end{macrocode}
-%\todo{translate in french}Remove spaces between Newick grammar.
+%Remove spaces between Newick grammar.
 %    \begin{macrocode}
     -- Remove spaces between Newick grammar
     elseif lpeg.match(space,newicktree,counter) then
       counter = counter + 1
 
 %    \end{macrocode}
-%\todo{translate in french}Remove single quotes et replace underscore with space.
+%Remove single quotes et replace underscore with space.
 %    \begin{macrocode}
     -- Remove single quotes et replace underscore with space
     else
@@ -675,7 +669,7 @@ function NewickParser (newicktree)
   end -- end of while loop
 
 %    \end{macrocode}
-%\paragraph{\todo{translate in french}Construction of the final table}
+%\paragraph{Construction of the final table}
 %The node 1 (root) is its own parent.
 %    \begin{macrocode}
   -- The node 1 (root) is its own parent
@@ -690,13 +684,13 @@ function NewickParser (newicktree)
   }
 
 %    \end{macrocode}
-%\todo{translate in french}Loop each value in the temporary table.
+%Loop each value in the temporary table.
 %    \begin{macrocode}
   -- Loop each value in the temporary table
   for k,v in pairs(newicktable) do
 
 %    \end{macrocode}
-%\todo{translate in french}Left parenthesis: create a new child node.
+%Left parenthesis: create a new child node.
 %    \begin{macrocode}
     -- Left parenthesis : create a new child node
     if lpeg.match(leftparenthesis,v) then
@@ -718,7 +712,7 @@ function NewickParser (newicktree)
       end
 
 %    \end{macrocode}
-%\todo{translate in french}Comma: come back to parent and create new child node.
+%Comma: come back to parent and create new child node.
 %    \begin{macrocode}
     -- Comma: come back to parent and create new child node
     elseif lpeg.match(comma,v) then
@@ -740,7 +734,7 @@ function NewickParser (newicktree)
       end
 
 %    \end{macrocode}
-%\todo{translate in french}Right parenthesis: come back to parent node.
+%Right parenthesis: come back to parent node.
 %    \begin{macrocode}
     -- Right parenthesis: come back to parent node
     elseif lpeg.match(rightparenthesis,v) then
@@ -748,26 +742,26 @@ function NewickParser (newicktree)
       parent_node = node[parent_node]["parent"]
 
 %    \end{macrocode}
-%\todo{translate in french}Semicolon: end of tree and so end of loop!
+%Semicolon: end of tree and so end of loop!
 %    \begin{macrocode}
     elseif lpeg.match(semicolon,v) then
       break
 %    \end{macrocode}
-%\todo{translate in french}Colon: do nothing in the loop (it means there's a distance, but it's not important for the moment)
+%Colon: do nothing in the loop (it means there's a distance, but it's not important for the moment)
 %    \begin{macrocode}
     elseif lpeg.match(colon,v) then
 %    \end{macrocode}
-%\todo{translate in french}A number is a distance. We put this number in the node table.
+%A number is a distance. We put this number in the node table.
 %    \begin{macrocode}
     elseif lpeg.match(number,v) then
       node[current_node]["distance"] = v
 %    \end{macrocode}
-%\todo{translate in french}Internal node label. If the current value is not a Newick sign but the previous is a right parenthesis, then it's the name of an internal node.
+%Internal node label. If the current value is not a Newick sign but the previous is a right parenthesis, then it's the name of an internal node.
 %    \begin{macrocode}
     elseif lpeg.match(rightparenthesis,newicktable[k-1]) then
       node[current_node]["label"] = v
 %    \end{macrocode}
-%\todo{translate in french}Anything else is the label of an external node (a leaf).
+%Anything else is the label of an external node (a leaf).
 %    \begin{macrocode}
     else
       node[current_node]["type"] = "leaf"
@@ -776,14 +770,14 @@ function NewickParser (newicktree)
     end
 
 %    \end{macrocode}
-%\todo{translate in french}End of loop, end of function, return the node table.
+%End of loop, end of function, return the node table.
 %    \begin{macrocode}
   end
   return node -- return thee node table
 end
 %    \end{macrocode}
 %\end{macro}
-%\lang{\subsubsection{Composing functions}}{\subsubsection{Fonction de composition}}
+%\subsubsection{Composing functions}
 %
 %\begin{macro}{Table2FoldTree}
 %Compute node coordinates with fold angles
@@ -805,7 +799,7 @@ function Table2FoldTree (node)
     end
   end
 %    \end{macrocode}
-%\lang{Loop while parent is superior to 1}{}
+%Loop while parent is superior to 1
 %    \begin{macrocode}
   -- boucle tant que parent est supérieur à 1
   while GetNum(parent) > 1 do 
@@ -918,8 +912,8 @@ function Table2StraightTree (node)
     local ymin = math.min(unpack(coordinates["y"]))
     local ymax = math.max(unpack(coordinates["y"]))
 %    \end{macrocode}
-%\lang{}{Calcul de $dx$. 
-%$$\|y_{max}-y_{min}\|\times 0.5$$}
+%\(dx\) computation
+%\[\|y_{max}-y_{min}\|\times 0.5\]
 %    \begin{macrocode}
     local dx = (
       ((math.abs(ymax-ymin))*.5)
@@ -958,7 +952,7 @@ function Table2StraightTree (node)
 end
 
 %    \end{macrocode}
-%\lang{\subsubsection{Drawing functions}}{\subsubsection{Fonctions de dessin}}
+%\subsubsection{Drawing functions}
 %
 %\begin{macro}{Labels}
 %    \begin{macrocode}
@@ -1042,8 +1036,7 @@ function TikzDraw (tree)
 	tex.print(endtikzenv)
 end
 
-ReadFile(arguments["tree"])
-print("Le contenu de draw type est : " .. arguments["draw type"])
+%ReadFile(arguments["tree"])
 %TikzDraw(NewickParser(arguments["tree"]))
 %    \end{macrocode}
 %\iffalse
