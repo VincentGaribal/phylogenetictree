@@ -197,9 +197,9 @@ End of file `\outFileName'.^^J%
 %The Newick Standard for representing trees in computer-readable form makes use of the correspondence between trees and nested parentheses, noticed in 1857 by the famous English mathematician Arthur Cayley. If we have this rooted tree:
 %
 %\begin{center}
-%\begin{tikzpicture}[rotate=90]
-%\phylogenetictree[draw_type=scope]{(B,(A,C,E),D);}
-%\end{tikzpicture}
+%^^A\begin{tikzpicture}[rotate=90]
+%\phylogenetictree[]{(B,(A,C,E),D);}
+%^^A\end{tikzpicture}
 %\end{center}
 %
 %then in the tree file it is represented by the following sequence of printable characters:
@@ -343,22 +343,19 @@ End of file `\outFileName'.^^J%
 %
 %^^A\phylogenetictree[distance=true,base width=0.05,base height=.5]{(('raccoon':19.19959,bear:6.80041):0.84600,((sea_lion:11.99700, seal:12.00300):7.52973,((monkey:100.85930,cat:47.14069):20.59201, weasel:18.87953):2.09460):3.87382,dog:25.46154);}
 %
-%^^A\input{example1.tree}
+%\phylogenetictree[]{example1.tree}
 %
 %\StopEventually{^^A
 %  \PrintIndex
 %  \PrintChanges
 %}
 %    
-%    \begin{macrocode}
-%<@@=phylogenetictree>
-%    \end{macrocode}
 %
 %\iffalse
 %<*package>
 %\fi
 %
-%\section{The Description of Macros}
+%\section{Implementation}
 %
 %\epigraph{Ce que l'on conçoit bien s'énonce clairement,\\ Et les mots pour le dire arrivent aisément.}{De L'Art poétique. Chant I (1674)\\ Nicolas \textsc{Boileau}}
 %
@@ -368,9 +365,15 @@ End of file `\outFileName'.^^J%
 %
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesExplPackage {phylogenetictree} {2013/10/26} {0.4f}
+\ProvidesExplPackage 
+  {phylogenetictree} 
+  {2013/10/26} 
+  {0.4f}
   {Draw phylogenetic trees}
-%\ProvidesPackage{phylogenetictree}[2013/07/09 0.4d Draw phylogenetic trees]
+%    \end{macrocode}
+%Module name
+%    \begin{macrocode}
+%<@@=phylogenetictree>
 %    \end{macrocode}
 %\macro{ifluatex}
 %Ifluatex switch loading.
@@ -389,10 +392,12 @@ End of file `\outFileName'.^^J%
 %    \end{macrocode}
 %\subsubsection{Key/value definitions}
 %
-%Property list with the default values of the differents keys
-%
+%Start of \LaTeX3 syntax
 %    \begin{macrocode}
 \ExplSyntaxOn
+%    \end{macrocode}
+%Here, we store in a property list all the keys with their respective default values. This is the only place where we keep key's name.
+%    \begin{macrocode}
 \prop_new:N   \g_@@_defaults_prop 
 \prop_put:Nnn \g_@@_defaults_prop { draw_type }   { standalone }
 \prop_put:Nnn \g_@@_defaults_prop { tree_type }   { straight }
@@ -401,19 +406,19 @@ End of file `\outFileName'.^^J%
 \prop_put:Nnn \g_@@_defaults_prop { angle }       { 90 }
 \prop_put:Nnn \g_@@_defaults_prop { distance }    { false }
 %    \end{macrocode}
-%
-%Each key/val pair is associated with a token list.
-%
+%Each key/(default)value pair (stored in the property list !) is associated with a token list.
 %    \begin{macrocode}
 \prop_map_inline:Nn \g_@@_defaults_prop
 {
   \keys_define:nn { phylogenetictree }
   {
-    #1 .tl_gset:c = { l_@@_#1_tl }
+    #1 .tl_set:c = { l_@@_#1_tl }
   }
 }
 %    \end{macrocode}
 %\subsubsection{Internal functions}
+%
+%This function
 %    \begin{macrocode}
 \cs_new:Npn \@@_get_parameters:n #1 
 {
@@ -433,14 +438,15 @@ End of file `\outFileName'.^^J%
 }
 %    \end{macrocode}
 %    \begin{macrocode}
-
 \cs_new:Npn \@@_get_value:n #1 
 {
   \prop_get:Nn \g_@@_prop { #1 }
 }
-
+%    \end{macrocode}
+%    \begin{macrocode}
 \cs_new_protected:Npn \@@_pass_to_lua:n #1 
 {
+  \prop_show:N \g_@@_prop
   \lua_now_x:n 
   {
     arguments = 
@@ -457,11 +463,31 @@ End of file `\outFileName'.^^J%
   }
 }
 %    \end{macrocode}
+%    \begin{macrocode}
+\cs_new:Npn \@@_get_tree:n #1
+{
+  \file_if_exist:nTF
+  { #1 }
+  {
+    \ior_new:N \l_@@_tree_file_ior
+    \ior_open:Nn \l_@@_tree_file_ior { #1 }
+    \ior_get:NN \l_@@_tree_file_ior \g_@@_newick_tree_tl
+    \ior_close:N \l_@@_tree_file_ior
+  }
+  {
+    \tl_gset:Nn \g_@@_newick_tree_tl { #1 }
+  }
+}
+%    \end{macrocode}
 %\subsubsection{User level function}
 %\begin{macro}{\phylogenetictree}
 %Key/val options are given between brackets (first argument). The tree is the second argument.
 %    \begin{macrocode}
-\NewDocumentCommand{\phylogenetictree}{ d[] m } {
+\NewDocumentCommand{\phylogenetictree}{ d[] m }
+{
+  \tl_gclear_new:N \g_@@_newick_tree_tl
+  \@@_get_tree:n { #2 }
+  Tree : \g_@@_newick_tree_tl
   \@@_get_parameters:n { #1 }
   \@@_pass_to_lua:n { #2 }
 }
@@ -483,6 +509,45 @@ require "lpeg"
 %    \end{macrocode}
 %
 %\subsubsection{Auxiliary functions}
+%    \begin{macrocode}
+function table_print (tt, indent, done)
+  done = done or {}
+  indent = indent or 0
+  if type(tt) == "table" then
+    local sb = {}
+    for key, value in pairs (tt) do
+      table.insert(sb, string.rep (" ", indent)) -- indent it
+      if type (value) == "table" and not done [value] then
+        done [value] = true
+        table.insert(sb, "{\n");
+        table.insert(sb, table_print (value, indent + 2, done))
+        table.insert(sb, string.rep (" ", indent)) -- indent it
+        table.insert(sb, "}\n");
+      elseif "number" == type(key) then
+        table.insert(sb, string.format("\"%s\"\n", tostring(value)))
+      else
+        table.insert(sb, string.format(
+            "%s = \"%s\"\n", tostring (key), tostring(value)))
+       end
+    end
+    return table.concat(sb)
+  else
+    return tt .. "\n"
+  end
+end
+
+function to_string( tbl )
+    if  "nil"       == type( tbl ) then
+        return tostring(nil)
+    elseif  "table" == type( tbl ) then
+        return table_print(tbl)
+    elseif  "string" == type( tbl ) then
+        return tbl
+    else
+        return tostring(tbl)
+    end
+end
+%    \end{macrocode}
 %
 %\macro{ReadFile}
 %The \verb|ReadFile| function checks if the argument of \verb|phylogenetictree| is a string or a filename. In the latter case, the file is open, and the newick tree is copied into \verb|arguments["tree"]|.
@@ -1036,6 +1101,7 @@ function TikzDraw (tree)
 	tex.print(endtikzenv)
 end
 
+print(to_string(arguments))
 %ReadFile(arguments["tree"])
 %TikzDraw(NewickParser(arguments["tree"]))
 %    \end{macrocode}
