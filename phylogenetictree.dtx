@@ -505,7 +505,7 @@ End of file `\outFileName'.^^J%
 %    \begin{macrocode}
 \cs_new:Npn \@@_get_parameters:n #1 
 {
-  \prop_clear_new:N \g_@@_prop
+  \prop_gclear_new:N \g_@@_prop
   \keys_set:nn { phylogenetictree } { #1 }
   \prop_map_inline:Nn \g_@@_defaults_prop
   {
@@ -568,10 +568,18 @@ End of file `\outFileName'.^^J%
 %    \begin{macrocode}
 \NewDocumentCommand{\phylogenetictree}{ d[] m }
 {
-  \tl_gclear_new:N \g_@@_newick_tree_tl
-  \@@_get_tree:n { #2 }
-  \@@_get_parameters:n { #1 }
-  \@@_pass_to_lua:n { #2 }
+  \IfNoValueTF {#1}
+    {
+      \prop_gclear_new:N \g_@@_prop
+      \prop_gset_eq:NN \g_@@_prop \g_@@_defaults_prop
+      \@@_pass_to_lua:n { #2 }
+    }
+    {
+      \tl_gclear_new:N \g_@@_newick_tree_tl
+      \@@_get_tree:n { #2 }
+      \@@_get_parameters:n { #1 }
+      \@@_pass_to_lua:n { #2 }
+    }
 }
 \ExplSyntaxOff
 %    \end{macrocode}
