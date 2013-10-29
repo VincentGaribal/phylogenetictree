@@ -595,28 +595,12 @@ require "lpeg"
 %
 %\subsubsection{Auxiliary functions}
 %
-%\macro{ReadFile}
-%The \verb|ReadFile| function checks if the argument of \verb|phylogenetictree|
-%is a string or a filename. In the latter case, the file is open, and the newick
-%tree is copied into \verb|arguments["tree"]|.
 %    \begin{macrocode}
--- ReadFile function
--- Check if the tree is a string or a file
-function ReadFile (newicktree)
-  local tree = ""
-  local file, errorMsg = io.open(newicktree, "r")
-  if not file then
-    if type(newicktree) ~= "string" then
-      tex.error(errorMsg)
-    end
-  else
-    for line in io.lines(newicktree) do
-      tree = tree..line
-    end
-    arguments["tree"] = tree
-  end
-end
+--------------------------------------------------------------------------------
+--                            Auxiliary functions                             --
+--------------------------------------------------------------------------------
 %    \end{macrocode}
+%
 %\begin{macro}{FindAllLeaves}
 %La fonction \verb|FindAllLeaves| trouve puis copie toutes les feuilles
 %associées à un nœud parent particulier. C'est une fonction récursive. Elle prend
@@ -667,6 +651,13 @@ end
 %    \end{macrocode}
 %\end{macro}
 %\subsubsection{Newick Parser}
+%
+%    \begin{macrocode}
+--------------------------------------------------------------------------------
+--                                Newick Parser                               --
+--------------------------------------------------------------------------------
+%    \end{macrocode}
+%
 %\begin{macro}{NewickParser}
 %The \verb|NewickParser| function transforms
 %inline Newick notation into a table.
@@ -911,6 +902,12 @@ end
 %\end{macro}
 %\subsubsection{Composing functions}
 %
+%    \begin{macrocode}
+--------------------------------------------------------------------------------
+--                            Composing functions                             --
+--------------------------------------------------------------------------------
+%    \end{macrocode}
+%
 %\begin{macro}{Table2FoldTree}
 %Compute node coordinates with fold angles
 %    \begin{macrocode}
@@ -1092,6 +1089,12 @@ end
 %\end{macro}
 %\subsubsection{Drawing functions}
 %
+%    \begin{macrocode}
+--------------------------------------------------------------------------------
+--                            Drawing functions                               --
+--------------------------------------------------------------------------------
+%    \end{macrocode}
+%
 %\begin{macro}{Labels}
 %    \begin{macrocode}
 -- print labels
@@ -1187,7 +1190,6 @@ end
 %\end{macro}
 %
 %    \begin{macrocode}
-ReadFile(arguments["tree"])
 TikzDraw(NewickParser(arguments["tree"]))
 %    \end{macrocode}
 %\iffalse
