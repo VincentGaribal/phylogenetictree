@@ -445,6 +445,7 @@ End of file `\outFileName'.^^J%
 %
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}
+\RequirePackage{xparse}
 \ProvidesExplPackage 
   {phylogenetictree} 
   {2013/10/29} 
@@ -454,24 +455,29 @@ End of file `\outFileName'.^^J%
 %\macro{ifluatex}
 %Ifluatex switch loading.
 %    \begin{macrocode}
-\RequirePackage{ifluatex}
+%\RequirePackage{ifluatex}
 %    \end{macrocode}
 %\macro{tikz} If the format is not \LaTeX, generate an error otherwise TikZ is
 %loaded and comes with pgfkeys.
 %    \begin{macrocode}
-\ifluatex
-  \RequirePackage{tikz}
-\else
-  \PackageError{phylogenetictree}%
-  {phylogenetictree only works with LuaTeX (LaTeX format)}%
-  {Switch your engine to luatex}
-\fi
+%\ifluatex
+%  \RequirePackage{tikz}
+%\else
+%  \PackageError{phylogenetictree}%
+%  {phylogenetictree only works with LuaTeX (LaTeX format)}%
+%  {Switch your engine to luatex}
+%\fi
 %    \end{macrocode}
 %\subsubsection{Key/value definitions}
 %
 %Start of \LaTeX3 syntax
 %    \begin{macrocode}
 \ExplSyntaxOn
+\luatex_if_engine:TF
+{\RequirePackage{tikz}}
+{\PackageError{phylogenetictree}
+{phylogenetictree only works with LuaTeX (LaTeX format)}
+{Switch your engine to luatex}}
 %    \end{macrocode}
 %Here, we store in a property list all the keys with their respective default
 %values. This is the only place where we keep key's name.
@@ -531,7 +537,6 @@ End of file `\outFileName'.^^J%
 %    \begin{macrocode}
 \cs_new_protected:Npn \@@_pass_to_lua:n #1 
 {
-  %\prop_show:N \g_@@_prop
   \lua_now_x:n 
   {
     arguments = 
@@ -937,7 +942,7 @@ function Table2FoldTree (node)
     child = {}
 -- on prend le parent avec le numéro le plus élevé (pour avoir la racine en
 -- dernier)
-    currentparent =math.max(unpack(parent))
+    currentparent =math.max(table.unpack(parent))
     -- on prend tous les enfants du parent courant --> child
     for k,v in pairs(node[currentparent]["childs"]) do
       table.insert(child,v)
@@ -949,10 +954,10 @@ function Table2FoldTree (node)
     end
 
 		-- on calcule les coordonnées du parent
-node[currentparent]["x"] = (math.min(unpack(coordinates["x"])))-arguments["dx"] node[currentparent]["y"] =
-              (math.max(unpack(coordinates["y"])))
-             -((math.abs((math.max(unpack(coordinates["y"])))
-             -(math.min(unpack(coordinates["y"])))))/2)
+node[currentparent]["x"] = (math.min(table.unpack(coordinates["x"])))-arguments["dx"] node[currentparent]["y"] =
+              (math.max(table.unpack(coordinates["y"])))
+             -((math.abs((math.max(table.unpack(coordinates["y"])))
+             -(math.min(table.unpack(coordinates["y"])))))/2)
 
 		-- on enlève les noeuds avec le parent en cours
 		local counter = 1
@@ -985,13 +990,12 @@ end
 -- calcule les coordonnées des noeuds avec des 
 -- branches à angle droit en respectant les distances
 function Table2FoldTreeDistance (node)
-	Table2FoldTree(node)
-	for k in ipairs(node) do
-		-- on décale les noeuds en x pour avoir les bonnes coordonnées
-node[k]["x"] = node[node[k]["parent"]]["x"] +
-arguments["dx"]*node[k]["distance"]
-	end
-	return node
+  Table2FoldTree(node)
+  for k in ipairs(node) do -- on décale les noeuds en x pour avoir les bonnes coordonnées
+    node[k]["x"] = node[node[k]["parent"]]["x"] +
+    arguments["dx"]*node[k]["distance"]
+  end
+  return node
 end
 %    \end{macrocode}
 %\end{macro}
@@ -1024,7 +1028,7 @@ function Table2StraightTree (node)
 
 -- on prend le parent avec le numéro le plus élevé (pour avoir la racine en
 -- dernier)
-    currentparent = math.max(unpack(parent))
+    currentparent = math.max(table.unpack(parent))
 
 -- on cherche toutes les feuilles du parent recherché et on les ajoute dans
 -- childs
@@ -1041,10 +1045,10 @@ function Table2StraightTree (node)
       table.insert(coordinates["y"],node[v]["y"])
     end
 
-    local xmin = math.min(unpack(coordinates["x"]))
-    local xmax = math.max(unpack(coordinates["x"]))
-    local ymin = math.min(unpack(coordinates["y"]))
-    local ymax = math.max(unpack(coordinates["y"]))
+    local xmin = math.min(table.unpack(coordinates["x"]))
+    local xmax = math.max(table.unpack(coordinates["x"]))
+    local ymin = math.min(table.unpack(coordinates["y"]))
+    local ymax = math.max(table.unpack(coordinates["y"]))
 %    \end{macrocode}
 %$dx$ computation
 %\[|y_{max}-y_{min}\|\times 0.5\]
