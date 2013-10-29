@@ -8,6 +8,5 @@ See http://www.latex-project.org/lppl.txt
 
 Phylogenetic trees are representations of evolutive relations between species.
 
-This package works only with lualatex because it relies on lua to parse, build and export the tree.
-
-Theres's a french translation (in fact the original version!) Inside the dtx file. To typeset it, you have to change the value of the \langue macro to anything but "english".
+This package works only with lualatex because it relies on lua to parse, build
+and export the tree.
