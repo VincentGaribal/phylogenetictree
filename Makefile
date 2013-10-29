@@ -1,12 +1,17 @@
+TEXPROGRAM=tex
 LATEXPROGRAM=lualatex
 INDEXPROGRAM=makeindex
 RM=/bin/rm -f
 
 SRC=phylogenetictree
-AUXFILES=*.log *.aux *.toc *.idx *.hd *.glo *.out *.txt *.ilg *.ind *.synctex.gz *.gls *.bbl *.blg *.cfg *.tree
+AUXFILES=*.log *.aux *.toc *.idx *.hd *.glo *.out *.txt *.ilg *.ind *.synctex.gz *.gls *.bbl *.blg *.cfg *.tree *.dvi
 PACKAGEFILES=*.sty *.lua *.ins *.pdf README
 
 all: phylogenetictree
+
+sty:
+	$(TEXPROGRAM) $(SRC).dtx
+	@mv README.txt README
 
 phylogenetictree: $(SRC).dtx
 	$(LATEXPROGRAM) $(SRC).dtx
