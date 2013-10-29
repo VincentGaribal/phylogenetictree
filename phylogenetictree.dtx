@@ -452,33 +452,25 @@ End of file `\outFileName'.^^J%
   {0.5}
   {Draw phylogenetic trees}
 %    \end{macrocode}
-%\macro{ifluatex}
-%Ifluatex switch loading.
-%    \begin{macrocode}
-%\RequirePackage{ifluatex}
-%    \end{macrocode}
-%\macro{tikz} If the format is not \LaTeX, generate an error otherwise TikZ is
-%loaded and comes with pgfkeys.
-%    \begin{macrocode}
-%\ifluatex
-%  \RequirePackage{tikz}
-%\else
-%  \PackageError{phylogenetictree}%
-%  {phylogenetictree only works with LuaTeX (LaTeX format)}%
-%  {Switch your engine to luatex}
-%\fi
-%    \end{macrocode}
-%\subsubsection{Key/value definitions}
 %
 %Start of \LaTeX3 syntax
 %    \begin{macrocode}
 \ExplSyntaxOn
-\luatex_if_engine:TF
-{\RequirePackage{tikz}}
-{\PackageError{phylogenetictree}
-{phylogenetictree only works with LuaTeX (LaTeX format)}
-{Switch your engine to luatex}}
 %    \end{macrocode}
+% Is \LuaTeX{} the current engine ? If so, load the tikz package, 
+% else stop the compilation and generate an error.
+%    \begin{macrocode}
+\luatex_if_engine:TF
+  { \RequirePackage{tikz} }
+  {
+    \PackageError{phylogenetictree}
+    {phylogenetictree only works with LuaTeX (LaTeX format)}
+    {Switch your engine to luatex}
+  }
+%    \end{macrocode}
+%
+%\subsubsection{Key/value definitions}
+%
 %Here, we store in a property list all the keys with their respective default
 %values. This is the only place where we keep key's name.
 %    \begin{macrocode}
